@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SOURABH SHARMA // 01 — Distributed Systems &amp; Cloud Architecture</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-primary": "#855300",
+            "surface-container-low": "#1b1b1b",
+            "primary-fixed": "#ffddb8",
+            "on-secondary-fixed-variant": "#444749",
+            "tertiary-fixed-dim": "#bec7d2",
+            "surface-tint": "#ffb95f",
+            "surface-container-highest": "#353535",
+            "tertiary-fixed": "#dae3ee",
+            "surface": "#131313",
+            "background": "#131313",
+            "on-error": "#690005",
+            "on-tertiary-container": "#3c454d",
+            "on-secondary": "#2d3133",
+            "error": "#ffb4ab",
+            "surface-dim": "#131313",
+            "on-secondary-fixed": "#191c1e",
+            "on-tertiary": "#29313a",
+            "outline-variant": "#534434",
+            "on-tertiary-fixed-variant": "#3f4850",
+            "on-surface-variant": "#d8c3ad",
+            "on-background": "#e2e2e2",
+            "outline": "#a08e7a",
+            "inverse-on-surface": "#303030",
+            "on-primary-fixed-variant": "#653e00",
+            "inverse-surface": "#e2e2e2",
+            "surface-bright": "#393939",
+            "tertiary": "#c4cdd8",
+            "secondary-container": "#464a4b",
+            "secondary": "#c4c7c9",
+            "primary-container": "#f59e0b",
+            "error-container": "#93000a",
+            "surface-container": "#1f1f1f",
+            "on-secondary-container": "#b6b9bb",
+            "tertiary-container": "#a9b2bc",
+            "on-tertiary-fixed": "#141c24",
+            "surface-variant": "#353535",
+            "on-error-container": "#ffdad6",
+            "surface-container-lowest": "#0e0e0e",
+            "on-primary": "#472a00",
+            "surface-container-high": "#2a2a2a",
+            "secondary-fixed": "#e0e3e5",
+            "primary": "#ffc174",
+            "on-primary-container": "#613b00",
+            "on-surface": "#e2e2e2",
+            "on-primary-fixed": "#2a1700",
+            "secondary-fixed-dim": "#c4c7c9",
+            "primary-fixed-dim": "#ffb95f"
+          },
+          "borderRadius": {
+            "DEFAULT": "0px",
+            "lg": "0px",
+            "xl": "0px",
+            "full": "0px"
+          },
+          "spacing": {
+            "gutter-desktop": "2.5rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "space-xl": "3rem",
+            "gutter": "1.5rem",
+            "margin-tablet": "2rem",
+            "space-lg": "1.5rem",
+            "margin-desktop": "4rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "label-meta": ["JetBrains Mono"],
+            "body-lg": ["Inter"],
+            "headline-sm": ["Space Grotesk"],
+            "display": ["Space Grotesk"],
+            "headline-md": ["Space Grotesk"],
+            "body-md": ["Inter"],
+            "display-mobile": ["Space Grotesk"],
+            "label-code": ["JetBrains Mono"],
+            "headline-lg-mobile": ["Space Grotesk"],
+            "body-sm": ["Inter"],
+            "headline-lg": ["Space Grotesk"]
+          },
+          "fontSize": {
+            "label-meta": ["11px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "500" }],
+            "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "headline-sm": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "display": ["80px", { "lineHeight": "84px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+            "headline-md": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["15px", { "lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400" }],
+            "display-mobile": ["44px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "label-code": ["13px", { "lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "headline-lg-mobile": ["32px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-sm": ["13px", { "lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400" }],
+            "headline-lg": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    * {
+      border-radius: 0 !important;
+    }
+    html {
+      scroll-behavior: smooth;
+      background-color: #0c0c0c;
+    }
+    ::selection {
+      background-color: #f59e0b;
+      color: #000000;
+    }
+    ::-webkit-scrollbar {
+      height: 4px;
+      width: 4px;
+      background: #0c0c0c;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #534434;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f59e0b;
+    }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body-md antialiased min-h-screen selection:bg-primary-container selection:text-surface-container-lowest">
+<!-- TopNavBar (Shared Component Anchor) -->
+<header class="bg-background dark:bg-background docked full-width top-0 z-50 border-b border-outline-variant dark:border-outline-variant flat no shadows sticky">
+<div class="w-full px-margin md:px-margin-tablet lg:px-margin-desktop py-space-sm flex justify-between items-center max-w-[1440px] mx-auto">
+<div class="flex items-center gap-space-md">
+<a class="font-label-code text-label-code font-bold tracking-widest text-on-surface dark:text-on-surface uppercase hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#hero">
+          SOURABH SHARMA // 01
+        </a>
+<span class="hidden xl:inline-block font-label-meta text-label-meta text-secondary dark:text-secondary pl-space-sm border-l border-outline-variant">
+          LOC // 37.7749° N, 122.4194° W [INDEX 0x01_ALPHA]
+        </span>
+</div>
+<!-- Navigation Links from Shared Components JSON with semantic active logic -->
+<nav class="hidden md:flex items-center gap-space-lg font-label-code text-label-code uppercase tracking-wider">
+<a class="text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#projects">ARCHIVE</a>
+<a class="text-primary dark:text-primary border-b border-primary pb-1 transition-colors duration-150" href="#projects">INDEX</a>
+<a class="text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#skills">SYSTEMS</a>
+<a class="text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#experience">LOGS</a>
+<a class="text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#contact">CONTACT</a>
+</nav>
+<!-- Trailing Action -->
+<div class="flex items-center gap-space-sm">
+<a class="font-label-code text-label-code uppercase tracking-wider text-primary border border-outline-variant hover:border-primary-container hover:bg-primary-container hover:text-surface-container-lowest px-space-md py-space-xs transition-colors duration-150 flex items-center gap-1" href="#">
+          CV.PDF <span class="text-secondary font-label-meta">[0.4MB]</span> ↗
+        </a>
+</div>
+</div>
+</header>
+<!-- SUB-TELEMETRY TICKER RULE -->
+<div class="w-full border-b border-outline-variant bg-surface-container-lowest">
+<div class="max-w-[1440px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-1 flex items-center justify-between font-label-meta text-label-meta text-secondary">
+<div class="flex items-center gap-4">
+<span class="inline-flex items-center gap-1.5 text-primary-container">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+          SYS-SPEC // CORE ARCHITECTURE ACTIVE
+        </span>
+<span class="hidden sm:inline text-outline-variant">|</span>
+<span class="hidden sm:inline">KERNEL: DISTRIBUTED_LINUX_X86_64</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-mono">UPTIME: 99.994%</span>
+<span class="text-outline-variant">|</span>
+<span class="text-primary">CLUSTER: US-WEST-2</span>
+</div>
+</div>
+</div>
+<main class="max-w-[1440px] mx-auto">
+<!-- 1. HERO SECTION -->
+<section class="px-margin md:px-margin-tablet lg:px-margin-desktop pt-space-xl pb-space-xl border-b border-outline-variant relative" id="hero">
+<div class="grid grid-cols-12 gap-y-space-lg">
+<!-- Sys Spec Header Tag -->
+<div class="col-span-12 flex items-center justify-between pb-space-sm border-b border-outline-variant">
+<span class="font-label-code text-label-code text-primary-container uppercase tracking-widest flex items-center gap-2">
+<span class="w-2 h-2 bg-primary-container"></span>
+            ■ SYS-SPEC // CORE ARCHITECTURE
+          </span>
+<span class="font-label-meta text-label-meta text-secondary uppercase">
+            REF: SF_01_PROD // 2024
+          </span>
+</div>
+<!-- Huge Display Typography -->
+<div class="col-span-12 py-space-lg">
+<h1 class="font-display text-display-mobile md:font-display md:text-display lg:text-[112px] lg:leading-[104px] font-bold text-on-surface uppercase tracking-tight break-words">
+            SOURABH<br class="hidden sm:block"/> SHARMA
+          </h1>
+</div>
+<!-- Subtitle & Editorial Tagline -->
+<div class="col-span-12 lg:col-span-10 grid grid-cols-1 lg:grid-cols-12 gap-space-md pt-space-sm border-t border-outline-variant">
+<div class="lg:col-span-6">
+<p class="font-label-code text-label-code text-primary uppercase tracking-wider font-semibold">
+              SOFTWARE ENGINEER // DISTRIBUTED SYSTEMS &amp; CLOUD ARCHITECTURE
+            </p>
+</div>
+<div class="lg:col-span-6">
+<p class="font-body-lg text-body-lg text-secondary leading-relaxed">
+              Architecting resilient high-throughput microservices, sub-100ms telemetry pipelines, and mission-critical cloud infrastructure.
+            </p>
+</div>
+</div>
+<!-- Bottom Status & External Links Grid -->
+<div class="col-span-12 pt-space-xl mt-space-lg border-t border-outline-variant flex flex-col md:flex-row justify-between items-start md:items-center gap-space-md">
+<div class="flex flex-wrap items-center gap-space-md font-label-code text-label-code uppercase tracking-wider">
+<a class="text-on-surface hover:text-primary transition-colors flex items-center gap-1 underline underline-offset-4 decoration-outline-variant hover:decoration-primary" href="https://github.com" rel="noreferrer" target="_blank">
+              GITHUB ↗
+            </a>
+<span class="text-outline-variant">/</span>
+<a class="text-on-surface hover:text-primary transition-colors flex items-center gap-1 underline underline-offset-4 decoration-outline-variant hover:decoration-primary" href="https://linkedin.com" rel="noreferrer" target="_blank">
+              LINKEDIN ↗
+            </a>
+<span class="text-outline-variant">/</span>
+<a class="text-on-surface hover:text-primary transition-colors flex items-center gap-1 underline underline-offset-4 decoration-outline-variant hover:decoration-primary" href="mailto:sourabh.sharma@example.com">
+              EMAIL ↗
+            </a>
+<span class="text-outline-variant">/</span>
+<a class="text-on-surface hover:text-primary transition-colors flex items-center gap-1 underline underline-offset-4 decoration-outline-variant hover:decoration-primary" href="https://x.com" rel="noreferrer" target="_blank">
+              X / TWITTER ↗
+            </a>
+</div>
+<div class="font-label-meta text-label-meta text-primary-container flex items-center gap-2">
+<span class="inline-block w-2 h-2 bg-primary-container animate-pulse"></span>
+            ■ SYS: ACTIVE / SAN FRANCISCO, CA
+          </div>
+</div>
+</div>
+</section>
+<!-- 2. PROJECTS (Alternating Left/Right Layout) -->
+<section class="px-margin md:px-margin-tablet lg:px-margin-desktop py-space-xl border-b border-outline-variant relative overflow-hidden" id="projects">
+<!-- Watermark Numeral -->
+<span class="absolute right-margin top-8 font-display text-[160px] leading-none font-bold text-surface-container select-none pointer-events-none opacity-20 -z-0">
+        01
+      </span>
+<!-- Section Header -->
+<div class="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between border-b border-outline-variant pb-space-md mb-space-xl">
+<div>
+<span class="font-label-meta text-label-meta text-primary-container uppercase tracking-widest block mb-1">
+            ENGINEERING DISPATCH
+          </span>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg font-bold uppercase text-on-surface tracking-tight">
+            PROJECTS / SELECTED WORKS 2022–2024
+          </h2>
+</div>
+<span class="font-label-code text-label-code text-secondary uppercase tracking-widest mt-2 sm:mt-0">
+          [COUNT: 02_PROD_DEPLOYED]
+        </span>
+</div>
+<!-- Project 1: ATLAS (Image Left, Spec Right) -->
+<div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-space-lg mb-space-xl pb-space-xl border-b border-outline-variant">
+<!-- Left Side: Edge-to-Edge Image Enclosure -->
+<div class="lg:col-span-7 flex flex-col">
+<div class="border border-outline-variant bg-surface-container-lowest relative group">
+<div class="flex items-center justify-between px-space-sm py-1 border-b border-outline-variant bg-surface-container font-label-meta text-label-meta text-secondary">
+<span class="text-primary-container">[DIAGNOSTICS_VIEW // ATLAS_CORE]</span>
+<span>40M+ EVT/DAY</span>
+</div>
+<div class="overflow-hidden aspect-video bg-black flex items-center justify-center">
+<img alt="Atlas Real-Time Cloud Telemetry Dashboard UI" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:contrast-100 transition-all duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1U5XgkRlgkDgeMtVMV_nP0kYXgDn2N570c3mYW33vl0Df2OwYNHAlehuHGOz2-89ez6tZYl2duBTu_EU_LRBb-dL2gUpo3OzmS77XSgSLfxP0vcbC5BWUs6Yp71clz2QBq1LWN04i1T7nEA7dfCTdAC20rPRLIVo33Dc1Wxq7RcNzPAKfmb76H8-xNfOl-yvSoifSvm-xH672i7Q6ayiWrNIX37vJr4aW_UWYQutqXNU_esawFc3ks_lWw"/>
+</div>
+<div class="px-space-sm py-1 border-t border-outline-variant bg-surface-container-lowest flex justify-between font-label-meta text-label-meta text-outline">
+<span>LATENCY: P99 84MS</span>
+<span>STATUS: ONLINE</span>
+</div>
+</div>
+</div>
+<!-- Right Side: Architectural Spec Readout -->
+<div class="lg:col-span-5 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-xs border-b border-outline-variant font-label-meta text-label-meta text-primary-container">
+<span>■ SYS-REF: 0X9A4</span>
+<span class="text-secondary">CLASS: TELEMETRY_STREAM</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface uppercase tracking-tight mt-space-sm mb-space-md">
+              01 // ATLAS — REAL-TIME CLOUD TELEMETRY
+            </h3>
+<p class="font-body-md text-body-md text-secondary leading-relaxed mb-space-md">
+              High-throughput event aggregation architecture processing 40M+ daily telemetry events with sub-100ms analytical query response times. Features partitioned Kafka event streams, automated anomaly identification, and granular distributed pipeline tracing for zero-latency operational clarity.
+            </p>
+<div class="p-space-sm bg-surface-container border border-outline-variant mb-space-lg">
+<div class="font-label-meta text-label-meta text-outline uppercase mb-1">SYSTEM CAPABILITIES</div>
+<ul class="font-label-code text-label-code text-on-surface space-y-1">
+<li>→ Dynamic partition rebalancing with zero dropped frames</li>
+<li>→ Pre-warmed aggregate views via Redis cluster</li>
+<li>→ Granular p99 alert dispatching across multi-region nodes</li>
+</ul>
+</div>
+</div>
+<div>
+<div class="font-label-code text-label-code text-secondary mb-space-md leading-relaxed border-t border-outline-variant pt-space-sm">
+<span class="text-on-surface font-semibold">STACK:</span> Go / gRPC / PostgreSQL / Redis / Apache Kafka / Next.js / Tailwind CSS
+            </div>
+<a class="inline-flex items-center gap-2 px-space-md py-space-sm bg-surface-container-lowest border border-primary-container text-primary font-label-code text-label-code font-bold uppercase tracking-wider hover:bg-primary-container hover:text-surface-container-lowest transition-colors" href="#">
+              VIEW ARCHITECTURE &amp; SOURCE →
+            </a>
+</div>
+</div>
+</div>
+<!-- Project 2: NEXUS (Spec Left, Image Right) -->
+<div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- Left Side: Architectural Spec Readout -->
+<div class="lg:col-span-5 flex flex-col justify-between order-2 lg:order-1">
+<div>
+<div class="flex items-center justify-between pb-space-xs border-b border-outline-variant font-label-meta text-label-meta text-primary-container">
+<span>■ SYS-REF: 0X47B</span>
+<span class="text-secondary">CLASS: TOPOLOGY_ORCHESTRATION</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface uppercase tracking-tight mt-space-sm mb-space-md">
+              02 // NEXUS — DISTRIBUTED MESH &amp; INFRA MONITOR
+            </h3>
+<p class="font-body-md text-body-md text-secondary leading-relaxed mb-space-md">
+              Real-time topology visualizer and anomaly-detection engine engineered for mission-critical microservice fleets across multi-region Kubernetes clusters. Dynamically correlates cluster ingress latency, pod restarts, and inter-service HTTP mesh errors into an interactive node visualizer.
+            </p>
+<div class="p-space-sm bg-surface-container border border-outline-variant mb-space-lg">
+<div class="font-label-meta text-label-meta text-outline uppercase mb-1">SYSTEM CAPABILITIES</div>
+<ul class="font-label-code text-label-code text-on-surface space-y-1">
+<li>→ Sub-second topology graph construction across 600+ pods</li>
+<li>→ Autonomous fallback rerouting on node saturation</li>
+<li>→ Prometheus custom exporter ingestion with Prometheus v2</li>
+</ul>
+</div>
+</div>
+<div>
+<div class="font-label-code text-label-code text-secondary mb-space-md leading-relaxed border-t border-outline-variant pt-space-sm">
+<span class="text-on-surface font-semibold">STACK:</span> TypeScript / Go / Kubernetes / Prometheus / Grafana / Redis / Docker / GraphQL
+            </div>
+<a class="inline-flex items-center gap-2 px-space-md py-space-sm bg-surface-container-lowest border border-primary-container text-primary font-label-code text-label-code font-bold uppercase tracking-wider hover:bg-primary-container hover:text-surface-container-lowest transition-colors" href="#">
+              VIEW LIVE METRICS &amp; DEMO →
+            </a>
+</div>
+</div>
+<!-- Right Side: Edge-to-Edge Image Enclosure -->
+<div class="lg:col-span-7 flex flex-col order-1 lg:order-2">
+<div class="border border-outline-variant bg-surface-container-lowest relative group">
+<div class="flex items-center justify-between px-space-sm py-1 border-b border-outline-variant bg-surface-container font-label-meta text-label-meta text-secondary">
+<span class="text-primary-container">[TOPOLOGY_MAP // NEXUS_INFRA]</span>
+<span>K8S CLUSTER ALPHA</span>
+</div>
+<div class="overflow-hidden aspect-video bg-black flex items-center justify-center">
+<img alt="Nexus Distributed Infrastructure Topology Network Graph" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:contrast-100 transition-all duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1WRIKgXZmgLsx-wBMH-AGCBGMvejrd4AdhKCt2XNG4ysHfMkNt2HRCq-wRKGB0ItOnmFunIF8jNXMkxb0JrtfJtva0xUFE8Yo4m6iS7Raq15142pV19w32IKQetJ5fQBRfh-z3vsOiD4rws8YqFVZ7CE2OZfAA7MsH1T0XKb-Y76luy-rt_MuEG2sATiM3VX64Xu4XpSR3xWfLVQAFXDdc9Qm7uH7V74dsTe--OCDAD0fQpY552WDKUfQ"/>
+</div>
+<div class="px-space-sm py-1 border-t border-outline-variant bg-surface-container-lowest flex justify-between font-label-meta text-label-meta text-outline">
+<span>NODES: 48/48 ONLINE</span>
+<span>MESH: ENVOY_SIDECAR</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. SKILLS (Architectural Typographic Matrix) -->
+<section class="px-margin md:px-margin-tablet lg:px-margin-desktop py-space-xl border-b border-outline-variant relative overflow-hidden" id="skills">
+<!-- Watermark Numeral -->
+<span class="absolute right-margin top-8 font-display text-[160px] leading-none font-bold text-surface-container select-none pointer-events-none opacity-20 -z-0">
+        02
+      </span>
+<!-- Section Header -->
+<div class="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between border-b border-outline-variant pb-space-md mb-space-xl">
+<div>
+<span class="font-label-meta text-label-meta text-primary-container uppercase tracking-widest block mb-1">
+            CORE CAPABILITIES
+          </span>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg font-bold uppercase text-on-surface tracking-tight">
+            SKILLS <span class="font-headline-md text-secondary font-normal text-headline-sm md:text-headline-md">/ TECHNICAL ARSENAL &amp; CORE SYSTEMS</span>
+</h2>
+</div>
+<span class="font-label-code text-label-code text-secondary uppercase tracking-widest mt-2 sm:mt-0">
+          [MATRIX // SPEC_V4]
+        </span>
+</div>
+<!-- Matrix Grid: 3-column razor-thin grid -->
+<div class="relative z-10 grid grid-cols-1 md:grid-cols-3 border border-outline-variant bg-surface-container-lowest">
+<!-- Cell 1: Languages -->
+<div class="p-space-lg border-b md:border-b-0 md:border-r border-outline-variant flex flex-col justify-between">
+<div>
+<div class="font-label-code text-label-code text-primary-container uppercase tracking-widest pb-space-sm border-b border-outline-variant flex items-center justify-between">
+<span>01 // LANGUAGES</span>
+<span class="text-outline">PRIMITIVES</span>
+</div>
+<ul class="divide-y divide-outline-variant mt-space-md">
+<li class="py-space-md">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface font-semibold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+                  Go (Golang)
+                </div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 pl-3.5">
+                  Concurrency primitives, Goroutines, Channels, Low-latency system runtimes, Garbage collection tuning.
+                </p>
+</li>
+<li class="py-space-md">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface font-semibold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+                  TypeScript / JavaScript
+                </div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 pl-3.5">
+                  Node.js event loops, Next.js architecture, Strict static typing, Non-blocking asynchronous I/O.
+                </p>
+</li>
+<li class="py-space-md">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface font-semibold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+                  Python
+                </div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 pl-3.5">
+                  Performance profiling, Systems automation scripts, Telemetry log parsers, Data ingestion tools.
+                </p>
+</li>
+<li class="py-space-md">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface font-semibold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+                  SQL &amp; Bash
+                </div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 pl-3.5">
+                  Complex index formulation, Execution plan analysis, Linux POSIX shell orchestration.
+                </p>
+</li>
+</ul>
+</div>
+<div class="pt-space-md mt-space-md border-t border-outline-variant font-label-meta text-label-meta text-outline">
+            SYS_CAP: NATIVE_CODEGEN_STRICT
+          </div>
+</div>
+<!-- Cell 2: Backend & Cloud Platforms -->
+<div class="p-space-lg border-b md:border-b-0 md:border-r border-outline-variant flex flex-col justify-between">
+<div>
+<div class="font-label-code text-label-code text-primary-container uppercase tracking-widest pb-space-sm border-b border-outline-variant flex items-center justify-between">
+<span>02 // BACKEND &amp; CLOUD PLATFORMS</span>
+<span class="text-outline">INFRASTRUCTURE</span>
+</div>
+<ul class="divide-y divide-outline-variant mt-space-md">
+<li class="py-space-md">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface font-semibold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+                  gRPC &amp; Protocol Buffers v3
+                </div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 pl-3.5">
+                  High-speed binary RPC serialization, HTTP/2 streaming, Schema contracts, Backward compatibility.
+                </p>
+</li>
+<li class="py-space-md">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface font-semibold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+                  Apache Kafka &amp; Event Queues
+                </div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 pl-3.5">
+                  Partition allocation, At-least-once delivery semantics, Consumer group failover, Backpressure mitigation.
+                </p>
+</li>
+<li class="py-space-md">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface font-semibold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+                  Kubernetes &amp; Docker
+                </div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 pl-3.5">
+                  Helm chart templating, DaemonSets, Zero-downtime rolling updates, Ingress controller configuration.
+                </p>
+</li>
+<li class="py-space-md">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface font-semibold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+                  AWS Ecosystem
+                </div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 pl-3.5">
+                  Multi-region VPC peering, EKS, ECS Fargate, IAM Least Privilege policies, S3 lifecycle rules.
+                </p>
+</li>
+</ul>
+</div>
+<div class="pt-space-md mt-space-md border-t border-outline-variant font-label-meta text-label-meta text-outline">
+            SYS_CAP: DISTRIBUTED_ORCHESTRATED
+          </div>
+</div>
+<!-- Cell 3: Data Stores & Observability -->
+<div class="p-space-lg flex flex-col justify-between">
+<div>
+<div class="font-label-code text-label-code text-primary-container uppercase tracking-widest pb-space-sm border-b border-outline-variant flex items-center justify-between">
+<span>03 // DATA STORES &amp; OBSERVABILITY</span>
+<span class="text-outline">STORAGE &amp; TRACE</span>
+</div>
+<ul class="divide-y divide-outline-variant mt-space-md">
+<li class="py-space-md">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface font-semibold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+                  PostgreSQL
+                </div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 pl-3.5">
+                  Table partitioning, PgBouncer pooling, B-tree tuning, Multi-index concurrency, WAL replication.
+                </p>
+</li>
+<li class="py-space-md">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface font-semibold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+                  Redis Cluster
+                </div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 pl-3.5">
+                  Distributed memory caching, Sentinel failover pairs, Leaky bucket rate limiting, Pub/Sub channels.
+                </p>
+</li>
+<li class="py-space-md">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface font-semibold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+                  Prometheus &amp; Grafana
+                </div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 pl-3.5">
+                  Tail latency SLA alerts, Custom exporter metrics, PromQL query optimization, Real-time dashboards.
+                </p>
+</li>
+<li class="py-space-md">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface font-semibold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+                  OpenTelemetry (OTel)
+                </div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 pl-3.5">
+                  Trace context propagation, Distributed spans across service meshes, Sampling strategies.
+                </p>
+</li>
+</ul>
+</div>
+<div class="pt-space-md mt-space-md border-t border-outline-variant font-label-meta text-label-meta text-outline">
+            SYS_CAP: OBSERVABILITY_SUB_SEC
+          </div>
+</div>
+</div>
+</section>
+<!-- 4. EXPERIENCE (Horizontal Scrolling Panels Layout) -->
+<section class="px-margin md:px-margin-tablet lg:px-margin-desktop py-space-xl border-b border-outline-variant relative overflow-hidden" id="experience">
+<!-- Watermark Numeral -->
+<span class="absolute right-margin top-8 font-display text-[160px] leading-none font-bold text-surface-container select-none pointer-events-none opacity-20 -z-0">
+        03
+      </span>
+<!-- Section Header -->
+<div class="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between border-b border-outline-variant pb-space-md mb-space-xl">
+<div>
+<span class="font-label-meta text-label-meta text-primary-container uppercase tracking-widest block mb-1">
+            CAREER TRAJECTORY
+          </span>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg font-bold uppercase text-on-surface tracking-tight">
+            EXPERIENCE <span class="font-headline-md text-secondary font-normal text-headline-sm md:text-headline-md">/ ENGINEERING ROLES &amp; PRODUCTION IMPACT</span>
+</h2>
+</div>
+<span class="font-label-code text-label-code text-primary uppercase tracking-widest mt-2 sm:mt-0 font-semibold">
+          [SCROLL HORIZONTALLY → // 3 ACTIVE LOGS]
+        </span>
+</div>
+<!-- Horizontal Scrollable Container -->
+<div class="relative z-10 flex overflow-x-auto gap-space-lg pb-space-lg scrollbar-thin">
+<!-- Panel 1: Current Role -->
+<div class="min-w-[340px] sm:min-w-[420px] max-w-[480px] p-space-lg bg-surface-container-lowest border border-outline-variant hover:border-primary-container transition-colors flex-shrink-0 flex flex-col justify-between">
+<div>
+<!-- Top Tag -->
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant font-label-code text-label-code">
+<span class="text-primary-container uppercase font-bold">CURRENT ROLE // 2023 — PRESENT</span>
+<span class="text-outline">LOG_01</span>
+</div>
+<!-- Title & Company -->
+<div class="mt-space-md mb-space-md">
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">
+                Starlight Cloud Technologies
+              </h3>
+<p class="font-label-code text-label-code text-primary uppercase tracking-wider mt-1">
+                Backend / Systems Engineer
+              </p>
+<p class="font-label-meta text-label-meta text-secondary uppercase mt-0.5">
+                San Francisco, CA // Hybrid
+              </p>
+</div>
+<!-- Mini Metrics Grid -->
+<div class="grid grid-cols-3 border border-outline-variant mb-space-md divide-x divide-outline-variant bg-surface-container text-center">
+<div class="p-2">
+<div class="font-label-meta text-label-meta text-outline uppercase">P99 SLA</div>
+<div class="font-label-code text-label-code text-primary font-bold mt-0.5">-34% LATENCY</div>
+</div>
+<div class="p-2">
+<div class="font-label-meta text-label-meta text-outline uppercase">SPEED</div>
+<div class="font-label-code text-label-code text-on-surface font-bold mt-0.5">&lt; 12 MIN DEPLOY</div>
+</div>
+<div class="p-2">
+<div class="font-label-meta text-label-meta text-outline uppercase">HOST</div>
+<div class="font-label-code text-label-code text-on-surface font-bold mt-0.5">MULTI-REGION AWS</div>
+</div>
+</div>
+<!-- Bullet Points -->
+<ul class="space-y-space-sm font-body-sm text-body-sm text-secondary">
+<li class="flex items-start gap-2">
+<span class="text-primary-container font-mono font-bold mt-0.5">▶</span>
+<span>Architected scalable microservices in Go and gRPC processing high-concurrency ingestion workloads handling over 15,000 req/sec.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-primary-container font-mono font-bold mt-0.5">▶</span>
+<span>Reduced API P99 latency by 34% by re-architecting Redis distributed caching strategies and eliminating cold connection pooling overhead.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-primary-container font-mono font-bold mt-0.5">▶</span>
+<span>Engineered automated CI/CD deployment pipelines using GitHub Actions, Docker, and Kubernetes with canary rollbacks.</span>
+</li>
+</ul>
+</div>
+<div class="pt-space-md mt-space-md border-t border-outline-variant font-label-meta text-label-meta text-outline flex justify-between">
+<span>ENG_POD: INFRA_STORAGE</span>
+<span>STATUS: ACTIVE_CONTRIBUTOR</span>
+</div>
+</div>
+<!-- Panel 2: Previous Role -->
+<div class="min-w-[340px] sm:min-w-[420px] max-w-[480px] p-space-lg bg-surface-container-lowest border border-outline-variant hover:border-primary-container transition-colors flex-shrink-0 flex flex-col justify-between">
+<div>
+<!-- Top Tag -->
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant font-label-code text-label-code">
+<span class="text-secondary uppercase font-bold">PREVIOUS DEPLOYMENT // 2022 — 2023</span>
+<span class="text-outline">LOG_02</span>
+</div>
+<!-- Title & Company -->
+<div class="mt-space-md mb-space-md">
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">
+                Vanguard Digital Labs
+              </h3>
+<p class="font-label-code text-label-code text-primary uppercase tracking-wider mt-1">
+                Associate Software Engineer
+              </p>
+<p class="font-label-meta text-label-meta text-secondary uppercase mt-0.5">
+                New York, NY // Platform &amp; Data
+              </p>
+</div>
+<!-- Mini Metrics Grid -->
+<div class="grid grid-cols-3 border border-outline-variant mb-space-md divide-x divide-outline-variant bg-surface-container text-center">
+<div class="p-2">
+<div class="font-label-meta text-label-meta text-outline uppercase">SCALE</div>
+<div class="font-label-code text-label-code text-primary font-bold mt-0.5">&gt; 100M ROWS</div>
+</div>
+<div class="p-2">
+<div class="font-label-meta text-label-meta text-outline uppercase">PROTOCOL</div>
+<div class="font-label-code text-label-code text-on-surface font-bold mt-0.5">REST + GRAPHQL</div>
+</div>
+<div class="p-2">
+<div class="font-label-meta text-label-meta text-outline uppercase">CONTAINER</div>
+<div class="font-label-code text-label-code text-on-surface font-bold mt-0.5">DOCKER &amp; HELM</div>
+</div>
+</div>
+<!-- Bullet Points -->
+<ul class="space-y-space-sm font-body-sm text-body-sm text-secondary">
+<li class="flex items-start gap-2">
+<span class="text-primary-container font-mono font-bold mt-0.5">▶</span>
+<span>Built resilient REST and GraphQL APIs serving mission-critical customer analytics dashboards with predictable payload throughput.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-primary-container font-mono font-bold mt-0.5">▶</span>
+<span>Optimized PostgreSQL query plans, complex indexing, and partition tables for time-series event storage exceeding 100M rows.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-primary-container font-mono font-bold mt-0.5">▶</span>
+<span>Containerized legacy services with Docker and standardized staging environments using Kubernetes manifests.</span>
+</li>
+</ul>
+</div>
+<div class="pt-space-md mt-space-md border-t border-outline-variant font-label-meta text-label-meta text-outline flex justify-between">
+<span>ENG_POD: DATA_SERVICES</span>
+<span>STATUS: COMPLETED</span>
+</div>
+</div>
+<!-- Panel 3: Internship -->
+<div class="min-w-[340px] sm:min-w-[420px] max-w-[480px] p-space-lg bg-surface-container-lowest border border-outline-variant hover:border-primary-container transition-colors flex-shrink-0 flex flex-col justify-between">
+<div>
+<!-- Top Tag -->
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant font-label-code text-label-code">
+<span class="text-secondary uppercase font-bold">INITIAL RESIDENCY // SUMMER 2022</span>
+<span class="text-outline">LOG_03</span>
+</div>
+<!-- Title & Company -->
+<div class="mt-space-md mb-space-md">
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">
+                Apex Systems
+              </h3>
+<p class="font-label-code text-label-code text-primary uppercase tracking-wider mt-1">
+                Software Engineering Intern
+              </p>
+<p class="font-label-meta text-label-meta text-secondary uppercase mt-0.5">
+                Boston, MA // Observability
+              </p>
+</div>
+<!-- Mini Metrics Grid -->
+<div class="grid grid-cols-3 border border-outline-variant mb-space-md divide-x divide-outline-variant bg-surface-container text-center">
+<div class="p-2">
+<div class="font-label-meta text-label-meta text-outline uppercase">TESTING</div>
+<div class="font-label-code text-label-code text-primary font-bold mt-0.5">62% → 88%</div>
+</div>
+<div class="p-2">
+<div class="font-label-meta text-label-meta text-outline uppercase">INCIDENTS</div>
+<div class="font-label-code text-label-code text-on-surface font-bold mt-0.5">+40% SPEED</div>
+</div>
+<div class="p-2">
+<div class="font-label-meta text-label-meta text-outline uppercase">FLEET</div>
+<div class="font-label-code text-label-code text-on-surface font-bold mt-0.5">8 SERVICES</div>
+</div>
+</div>
+<!-- Bullet Points -->
+<ul class="space-y-space-sm font-body-sm text-body-sm text-secondary">
+<li class="flex items-start gap-2">
+<span class="text-primary-container font-mono font-bold mt-0.5">▶</span>
+<span>Implemented OpenTelemetry distributed tracing and structured logging across 8 core microservices, increasing triage speed by 40%.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-primary-container font-mono font-bold mt-0.5">▶</span>
+<span>Authored unit, integration, and end-to-end regression suites improving backend test coverage from 62% to over 88%.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-primary-container font-mono font-bold mt-0.5">▶</span>
+<span>Collaborated with senior staff to isolate memory fragmentation within heavy concurrent JSON deserialization routines.</span>
+</li>
+</ul>
+</div>
+<div class="pt-space-md mt-space-md border-t border-outline-variant font-label-meta text-label-meta text-outline flex justify-between">
+<span>ENG_POD: CORE_TELEMETRY</span>
+<span>STATUS: GRADUATED</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. CONTACT SECTION -->
+<section class="px-margin md:px-margin-tablet lg:px-margin-desktop py-space-xl border-b border-outline-variant text-center relative overflow-hidden" id="contact">
+<div class="max-w-4xl mx-auto">
+<div class="font-label-meta text-label-meta text-primary-container uppercase tracking-widest mb-space-sm">
+          ■ INITIATE DISPATCH
+        </div>
+<h2 class="font-display text-display-mobile md:font-display md:text-display lg:text-[104px] lg:leading-[96px] font-bold text-on-surface uppercase tracking-tight mb-space-md">
+          SAY HELLO
+        </h2>
+<p class="font-body-lg text-body-lg text-secondary max-w-2xl mx-auto leading-relaxed mb-space-xl">
+          Available for high-impact engineering roles, architecture consulting, and distributed systems discussions.
+        </p>
+<!-- Primary Contact Direct Box -->
+<div class="inline-flex flex-col sm:flex-row items-center gap-space-sm mb-space-xl border border-primary-container/40 hover:border-primary-container bg-surface-container-lowest p-space-sm transition-colors">
+<a class="font-label-code text-base sm:text-2xl text-primary font-bold px-space-md py-space-sm hover:underline flex items-center gap-2" href="mailto:sourabh.sharma@example.com">
+            sourabh.sharma@example.com ↗
+          </a>
+<button class="font-label-code text-label-code uppercase tracking-wider bg-surface-container hover:bg-primary-container hover:text-surface-container-lowest text-on-surface px-space-md py-2.5 border border-outline-variant transition-colors" id="copyEmailBtn" onclick="navigator.clipboard.writeText('sourabh.sharma@example.com'); this.innerText='COPIED!';">
+            COPY ADDRESS
+          </button>
+</div>
+<!-- External Network Links In Clean Typographic Row -->
+<div class="flex flex-wrap items-center justify-center gap-space-md font-label-code text-label-code uppercase tracking-wider text-secondary">
+<a class="hover:text-primary transition-colors" href="https://github.com" rel="noreferrer" target="_blank">GITHUB ↗</a>
+<span class="text-outline-variant">|</span>
+<a class="hover:text-primary transition-colors" href="https://linkedin.com" rel="noreferrer" target="_blank">LINKEDIN ↗</a>
+<span class="text-outline-variant">|</span>
+<a class="hover:text-primary transition-colors" href="https://x.com" rel="noreferrer" target="_blank">TWITTER / X ↗</a>
+<span class="text-outline-variant">|</span>
+<a class="hover:text-primary transition-colors" href="#">RESUME (PDF) ↗</a>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component Anchor) -->
+<footer class="bg-background dark:bg-background docked full-width bottom-0 border-t border-outline-variant dark:border-outline-variant flat no shadows">
+<div class="w-full px-margin md:px-margin-tablet lg:px-margin-desktop py-space-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-space-md max-w-[1440px] mx-auto">
+<!-- Left Copyright & SYS-REF as mandated by Shared Components JSON -->
+<div class="font-label-meta text-label-meta uppercase tracking-widest text-secondary dark:text-secondary">
+        © 2024 SOURABH SHARMA. ALL RIGHTS RESERVED. SYS-REF: 0x88F
+        <span class="hidden lg:inline text-outline-variant pl-2">// SET IN SPACE GROTESK &amp; MONO // BUILT WITH TECHNICAL RIGOR</span>
+</div>
+<!-- Links mandated by Shared Components JSON -->
+<div class="flex items-center gap-space-md font-label-meta text-label-meta uppercase tracking-widest">
+<a class="text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary transition-colors duration-150" href="https://github.com">GITHUB</a>
+<a class="text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary transition-colors duration-150" href="https://linkedin.com">LINKEDIN</a>
+<a class="text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#hero">TERMINAL</a>
+<a class="text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#hero">RSS</a>
+<span class="text-outline-variant">|</span>
+<span class="text-primary-container flex items-center gap-1.5 font-bold">
+<span class="w-1.5 h-1.5 bg-primary-container"></span>
+          ■ ALL SYSTEMS OPERATIONAL // PTT-01
+        </span>
+</div>
+</div>
+</footer>
+<script>
+    // Lightweight vanilla micro-interaction for copy indicator reset
+    const copyBtn = document.getElementById('copyEmailBtn');
+    if (copyBtn) {
+      copyBtn.addEventListener('mouseleave', () => {
+        setTimeout(() => {
+          copyBtn.innerText = 'COPY ADDRESS';
+        }, 1200);
+      });
+    }
+  </script>
+</body></html>
