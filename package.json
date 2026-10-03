@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Personal portfolio of Sourabh Sharma — static Astro site deployed to Cloudflare Pages.",
+  "description": "Personal portfolio of Sourabh Sharma \u00e2\u20ac\u201d static Astro site deployed to Cloudflare Pages.",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -15,7 +15,6 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:e2e": "playwright test",
     "og": "node scripts/generate-og.mjs",
     "validate": "npm run format:check && npm run lint && npm run check && npm run build",
     "deploy": "npm run build && wrangler pages deploy dist --project-name=sourabh"
@@ -26,13 +25,12 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "@axe-core/playwright": "^4.13.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@fontsource-variable/space-grotesk": "^5.3.0",
-    "@playwright/test": "^1.63.0",
     "eslint": "^9.39.5",
     "eslint-plugin-astro": "^1.7.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
+    "playwright": "^1.63.0",
     "prettier": "^3.9.9",
     "prettier-plugin-astro": "^1.1.0",
     "typescript": "~6.0.3",

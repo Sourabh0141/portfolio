@@ -9,6 +9,8 @@ export default defineConfig({
   build: {
     format: 'file',
   },
+  // No markdown content, and Shiki's inline styles are incompatible with the CSP.
+  markdown: { syntaxHighlight: false },
   integrations: [sitemap()],
   devToolbar: { enabled: false },
   fonts: [
@@ -34,7 +36,7 @@ export default defineConfig({
       name: 'JetBrains Mono',
       cssVariable: '--font-mono',
       provider: fontProviders.fontsource(),
-      weights: [400, 500],
+      weights: ['400 500'],
       styles: ['normal'],
       subsets: ['latin'],
       fallbacks: ['ui-monospace', 'monospace'],

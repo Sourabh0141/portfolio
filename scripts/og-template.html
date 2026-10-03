@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: 'Space Grotesk';
+        font-weight: 300 700;
+        src: url('../node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2')
+          format('woff2');
+      }
+      @font-face {
+        font-family: 'JetBrains Mono';
+        font-weight: 100 800;
+        src: url('../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2')
+          format('woff2');
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background:
+          linear-gradient(#26231f 1px, transparent 1px) 0 0 / 100% 70px,
+          linear-gradient(90deg, #26231f 1px, transparent 1px) 0 0 / 70px 100%,
+          #0c0c0c;
+        color: #ebe8e3;
+        font-family: 'Space Grotesk', sans-serif;
+      }
+
+      .frame {
+        position: absolute;
+        inset: 48px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 44px 56px;
+        border: 1px solid #4a4032;
+        background: rgb(12 12 12 / 0.88);
+      }
+
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: #ffc174;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 24px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: '';
+        width: 14px;
+        height: 14px;
+        background: #f59e0b;
+      }
+
+      h1 {
+        font-size: 112px;
+        font-weight: 700;
+        line-height: 0.95;
+        letter-spacing: -0.045em;
+      }
+
+      p.lead {
+        margin-top: 20px;
+        max-width: 880px;
+        color: #aaa49a;
+        font-size: 32px;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
+      }
+
+      .foot {
+        display: flex;
+        justify-content: space-between;
+        color: #aaa49a;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 22px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <div class="eyebrow">Software Engineer · AI &amp; backend systems</div>
+      <div>
+        <h1>Sourabh<br />Sharma</h1>
+        <p class="lead">Async Python APIs, real-time messaging and model-serving microservices.</p>
+      </div>
+      <div class="foot"><span>Jaipur, India</span><span>sourabh.pages.dev</span></div>
+    </div>
+  </body>
+</html>

@@ -15,10 +15,6 @@ npm-debug.log*
 .dev.vars
 .wrangler/
 
-# test output
-test-results/
-playwright-report/
-blob-report/
 
 # os / editor
 .DS_Store

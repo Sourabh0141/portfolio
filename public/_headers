@@ -1,0 +1,16 @@
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy: frame-ancestors 'none'
+
+# Fingerprinted build output is safe to cache forever.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Everything else revalidates so content edits go live immediately.
+/*.pdf
+  Cache-Control: public, max-age=0, must-revalidate
