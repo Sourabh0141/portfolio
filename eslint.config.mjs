@@ -3,7 +3,7 @@ import eslintPluginAstro from 'eslint-plugin-astro';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
-  globalIgnores(['dist/', '.astro/', 'node_modules/', '.agents/', 'docs/reference/', 'public/']),
+  globalIgnores(['dist/', '.astro/', 'node_modules/', 'public/']),
   tseslint.configs.recommended,
   eslintPluginAstro.configs.recommended,
   eslintPluginAstro.configs['jsx-a11y-strict'],
