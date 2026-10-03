@@ -14,6 +14,9 @@ updates:
       # @astrojs/check does not support TypeScript 7 yet.
       - dependency-name: typescript
         update-types: ['version-update:semver-major']
+      # eslint-plugin-jsx-a11y does not support ESLint 10 yet.
+      - dependency-name: eslint
+        update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions
     directory: /
     schedule:

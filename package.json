@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Personal portfolio of Sourabh Sharma â€” static Astro site deployed to Cloudflare Pages.",
+  "description": "Personal portfolio of Sourabh Sharma — static Astro site deployed to Cloudflare Pages.",
   "engines": {
     "node": ">=22.12.0"
   },
