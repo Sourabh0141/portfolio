@@ -1,9 +1,9 @@
 {
-  "name": "sourabh-sharma-portfolio",
+  "name": "portfolio",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Personal portfolio of Sourabh Sharma — static Astro site deployed to Cloudflare Pages.",
+  "description": "A modern developer portfolio built with Astro, focused on performance and clean design.",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -16,8 +16,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "og": "node scripts/generate-og.mjs",
-    "validate": "npm run format:check && npm run lint && npm run check && npm run build",
-    "deploy": "npm run build && npx wrangler@4 pages deploy dist --project-name=sourabh --branch=main"
+    "validate": "npm run format:check && npm run lint && npm run check && npm run build"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
