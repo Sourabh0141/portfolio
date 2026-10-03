@@ -12,9 +12,7 @@ export interface Props {
     | 'copy'
     | 'check'
     | 'menu'
-    | 'close'
-    | 'map-pin'
-    | 'building';
+    | 'close';
   size?: number;
 }
 
@@ -90,18 +88,6 @@ const { name, size = 20 } = Astro.props;
     <>
       <line x1="5" y1="5" x2="19" y2="19" />
       <line x1="19" y1="5" x2="5" y2="19" />
-    </>
-  )}
-  {name === 'map-pin' && (
-    <>
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-      <circle cx="12" cy="10" r="3" />
-    </>
-  )}
-  {name === 'building' && (
-    <>
-      <rect x="4" y="3" width="16" height="18" rx="1" />
-      <path d="M9 21v-4h6v4M8 7h2M14 7h2M8 11h2M14 11h2" />
     </>
   )}
 </svg>

@@ -1,5 +1,3 @@
-import { SITE_URL } from '../site.config';
-
 /**
  * Everything personal and non-collection lives here. Edit this file (and the YAML in
  * `src/content`) to update the site — no component changes needed.
@@ -16,7 +14,6 @@ export const profile = {
   email: 'sourabh.sharma0141@gmail.com',
   phone: { display: '+91 89055 95681', href: '+918905595681' },
   employer: 'Predusk Technology Pvt Ltd',
-  siteUrl: SITE_URL,
   /** Served from `public/resume/`. Replace the file, keep the name. */
   resume: { href: '/resume/Sourabh-Sharma-Resume.pdf', label: 'Résumé (PDF)' },
 } as const;
