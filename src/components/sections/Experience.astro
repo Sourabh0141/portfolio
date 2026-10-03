@@ -1,0 +1,146 @@
+---
+import { getCollection } from 'astro:content';
+import { formatRange } from '../../lib/format';
+import SectionHeading from '../SectionHeading.astro';
+
+// Newest first; `start` is a sortable YYYY-MM string.
+const roles = (await getCollection('experience')).sort((a, b) =>
+  b.data.start.localeCompare(a.data.start),
+);
+---
+
+<section id="experience" class="section" aria-labelledby="experience-title">
+  <div class="container">
+    <SectionHeading
+      id="experience-title"
+      index="02"
+      eyebrow="Experience"
+      title="Where I’ve been doing the work."
+    />
+
+    <ol class="roles">
+      {roles.map((role) => (
+        <li class="role reveal">
+          <div class="role__meta">
+            <p class="label label--accent">
+              {formatRange(role.data.start, role.data.end)}
+              {!role.data.end && <span class="role__current">Current</span>}
+            </p>
+            <h3>{role.data.role}</h3>
+            <p class="role__company">{role.data.company}</p>
+            <p class="label">{role.data.location}</p>
+          </div>
+
+          <div class="role__body">
+            <p class="role__summary">{role.data.summary}</p>
+            {role.data.groups.map((group) => (
+              <section class="role__group">
+                <h4>{group.heading}</h4>
+                <ul>
+                  {group.points.map((point) => (
+                    <li>{point}</li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .roles {
+    display: grid;
+    gap: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .role {
+    display: grid;
+    gap: 1.5rem;
+    padding-top: clamp(1.5rem, 4vw, 2.5rem);
+    border-top: 1px solid var(--line);
+  }
+
+  .role__meta {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+  }
+
+  .role__current {
+    margin-left: 0.6rem;
+    padding: 0.1rem 0.45rem;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    color: var(--accent-text);
+    font-size: 0.6875rem;
+  }
+
+  h3 {
+    margin-top: 0.4rem;
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    font-weight: 600;
+  }
+
+  .role__company {
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .role__body {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .role__summary {
+    max-width: 62ch;
+    color: var(--text-muted);
+    font-size: 1.0625rem;
+  }
+
+  .role__group {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  h4 {
+    font-family: var(--font-code);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .role__group ul {
+    display: grid;
+    gap: 0.7rem;
+    max-width: 66ch;
+  }
+
+  .role__group li {
+    position: relative;
+    padding-left: 1.4rem;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+  }
+
+  .role__group li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.75em;
+    width: 0.6rem;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  @media (min-width: 56rem) {
+    .role {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr);
+      gap: clamp(2rem, 5vw, 4rem);
+    }
+  }
+</style>

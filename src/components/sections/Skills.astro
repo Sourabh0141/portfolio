@@ -1,0 +1,52 @@
+---
+import { skills } from '../../data/site';
+import SectionHeading from '../SectionHeading.astro';
+---
+
+<section id="skills" class="section" aria-labelledby="skills-title">
+  <div class="container">
+    <SectionHeading id="skills-title" index="03" eyebrow="Skills" title="The tools I reach for." />
+
+    <div class="skills">
+      {skills.map((group) => (
+        <section class="skills__group reveal">
+          <h3 class="label label--accent">{group.heading}</h3>
+          <ul class="tag-list">
+            {group.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .skills {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .skills__group {
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+  }
+
+  @media (min-width: 40rem) {
+    .skills {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .skills {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

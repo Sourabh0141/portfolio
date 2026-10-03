@@ -1,0 +1,38 @@
+---
+export interface Props {
+  /** Two-digit section index shown in the eyebrow, e.g. "01". */
+  index: string;
+  eyebrow: string;
+  title: string;
+  /** id applied to the <h2>, referenced by the section's aria-labelledby. */
+  id: string;
+}
+
+const { index, eyebrow, title, id } = Astro.props;
+---
+
+<header class="section-heading">
+  <p class="label label--accent">
+    <span class="section-heading__index">{index}</span> <span aria-hidden="true">/</span> {eyebrow}
+  </p>
+  <h2 id={id}>{title}</h2>
+</header>
+
+<style>
+  .section-heading {
+    display: grid;
+    gap: 0.9rem;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .section-heading__index {
+    color: var(--text-faint);
+  }
+
+  h2 {
+    max-width: 22ch;
+    font-size: clamp(2rem, 5.5vw, 3.25rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+</style>

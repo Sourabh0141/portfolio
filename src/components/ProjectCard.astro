@@ -1,0 +1,157 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import FlowDiagram from './FlowDiagram.astro';
+import Icon from './Icon.astro';
+
+export interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, kind, status, summary, highlights, flow, stack, links, featured } = project.data;
+---
+
+<article
+  class:list={['card', 'reveal', { 'card--featured': featured }]}
+  aria-labelledby={`project-${project.id}`}
+>
+  <div class="card__main">
+    <header class="card__header">
+      <p class="label">{kind}</p>
+      <h3 id={`project-${project.id}`}>{title}</h3>
+      <p class="card__status label label--accent">
+        <span class="card__dot" aria-hidden="true"></span>
+        {status}
+      </p>
+    </header>
+
+    <p class="card__summary">{summary}</p>
+
+    {!featured && <FlowDiagram steps={flow} variant="wrap" title={title} />}
+
+    <ul class="card__highlights">
+      {highlights.map((h) => (
+        <li>{h}</li>
+      ))}
+    </ul>
+
+    <ul class="tag-list" aria-label="Technologies">
+      {stack.map((s) => (
+        <li>{s}</li>
+      ))}
+    </ul>
+
+    {links.length > 0 && (
+      <ul class="card__links">
+        {links.map((l) => (
+          <li>
+            <a class="btn btn--primary" href={l.url} rel="noopener noreferrer" target="_blank">
+              {l.label}
+              <Icon name="arrow-up-right" size={18} />
+              <span class="visually-hidden"> (opens in a new tab)</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+
+  {featured && (
+    <aside class="card__aside">
+      <FlowDiagram steps={flow} variant="stack" title={title} />
+    </aside>
+  )}
+</article>
+
+<style>
+  .card {
+    display: grid;
+    gap: 2rem;
+    padding: clamp(1.25rem, 3.5vw, 2rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+    transition: border-color 0.2s ease;
+  }
+
+  .card:hover {
+    border-color: var(--line-strong);
+  }
+
+  .card__main {
+    display: grid;
+    align-content: start;
+    gap: 1.25rem;
+  }
+
+  .card__header {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  h3 {
+    font-size: clamp(1.5rem, 3.4vw, 2rem);
+    font-weight: 600;
+  }
+
+  .card__status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .card__dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .card__summary {
+    color: var(--text-muted);
+  }
+
+  .card__highlights {
+    display: grid;
+    gap: 0.7rem;
+    font-size: 0.9375rem;
+  }
+
+  .card__highlights li {
+    position: relative;
+    padding-left: 1.4rem;
+    color: var(--text-muted);
+  }
+
+  .card__highlights li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 0.6rem;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .card__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .card__aside {
+    align-self: start;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-sunken);
+  }
+
+  @media (min-width: 60rem) {
+    .card--featured {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: clamp(2rem, 4vw, 3.5rem);
+    }
+  }
+</style>

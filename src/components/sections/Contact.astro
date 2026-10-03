@@ -1,0 +1,159 @@
+---
+import { profile, socials } from '../../data/site';
+import Icon from '../Icon.astro';
+import SectionHeading from '../SectionHeading.astro';
+---
+
+<section id="contact" class="section" aria-labelledby="contact-title">
+  <div class="container">
+    <SectionHeading
+      id="contact-title"
+      index="05"
+      eyebrow="Contact"
+      title="Let’s talk about what you’re building."
+    />
+
+    <div class="contact reveal">
+      <p class="contact__intro">
+        Got a role, a project or a question about anything above? Email is the quickest way to reach
+        me — I’m based in Jaipur and happy to talk across time zones.
+      </p>
+
+      <ul class="contact__list">
+        <li>
+          <span class="contact__icon">
+            <Icon name="mail" />
+          </span>
+          <span class="label">Email</span>
+          <a class="contact__value" href={`mailto:${profile.email}`}>
+            {profile.email}
+          </a>
+          <button
+            type="button"
+            class="btn btn--small contact__copy"
+            data-copy={profile.email}
+            data-copy-label="email address"
+          >
+            <span data-copy-idle>
+              <Icon name="copy" size={16} /> Copy
+            </span>
+            <span data-copy-done hidden>
+              <Icon name="check" size={16} /> Copied
+            </span>
+          </button>
+        </li>
+        <li>
+          <span class="contact__icon">
+            <Icon name="phone" />
+          </span>
+          <span class="label">Phone</span>
+          <a class="contact__value" href={`tel:${profile.phone.href}`}>
+            {profile.phone.display}
+          </a>
+        </li>
+        {socials.map((s) => (
+          <li>
+            <span class="contact__icon">
+              <Icon name={s.id} />
+            </span>
+            <span class="label">{s.label}</span>
+            <a class="contact__value" href={s.url} rel="noopener noreferrer" target="_blank">
+              {s.url.replace('https://', '').replace('www.', '').replace(/\/$/, '')}
+              <span class="visually-hidden"> (opens in a new tab)</span>
+            </a>
+          </li>
+        ))}
+        <li>
+          <span class="contact__icon">
+            <Icon name="download" />
+          </span>
+          <span class="label">Résumé</span>
+          <a class="contact__value" href={profile.resume.href} download>
+            {profile.resume.label}
+          </a>
+        </li>
+      </ul>
+
+      <p
+        class="contact__status visually-hidden"
+        role="status"
+        aria-live="polite"
+        data-copy-status
+      ></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    display: grid;
+    gap: 2rem;
+    max-width: 52rem;
+  }
+
+  .contact__intro {
+    max-width: 56ch;
+    color: var(--text-muted);
+    font-size: clamp(1.0625rem, 2.2vw, 1.25rem);
+  }
+
+  .contact__list {
+    border-top: 1px solid var(--line);
+  }
+
+  .contact__list li {
+    display: grid;
+    grid-template-columns: 1.5rem 1fr;
+    gap: 0.15rem 0.9rem;
+    align-items: center;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .contact__icon {
+    grid-row: span 2;
+    color: var(--accent-text);
+  }
+
+  .contact__value {
+    grid-column: 2;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-family: var(--font-head);
+    font-size: clamp(1.05rem, 3.6vw, 1.5rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-decoration-color: var(--line-strong);
+    overflow-wrap: anywhere;
+  }
+
+  .contact__value:hover {
+    color: var(--accent-text);
+    text-decoration-color: var(--accent);
+  }
+
+  .contact__copy {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  @media (min-width: 40rem) {
+    .contact__list li {
+      grid-template-columns: 1.5rem 7rem 1fr auto;
+      gap: 0 1rem;
+    }
+
+    .contact__icon {
+      grid-row: auto;
+    }
+
+    .contact__value {
+      grid-column: auto;
+    }
+
+    .contact__copy {
+      grid-column: auto;
+    }
+  }
+</style>
