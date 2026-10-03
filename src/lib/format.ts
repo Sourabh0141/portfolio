@@ -1,4 +1,8 @@
-const monthYear = new Intl.DateTimeFormat('en-IN', { month: 'short', year: 'numeric' });
+const monthYear = new Intl.DateTimeFormat('en-IN', {
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
 
 /** Formats a `YYYY-MM` string as e.g. "Nov 2025". */
 export function formatMonth(value: string): string {

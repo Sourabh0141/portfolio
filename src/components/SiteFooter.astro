@@ -1,0 +1,73 @@
+---
+import { profile, socials } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p class="label">
+      © {year} {profile.name}
+    </p>
+    <ul class="site-footer__links">
+      {socials.map((s) => (
+        <li>
+          <a href={s.url} rel="noopener noreferrer" target="_blank">
+            {s.label}
+            <span class="visually-hidden"> (opens in a new tab)</span>
+          </a>
+        </li>
+      ))}
+      <li>
+        <a href="#top">Back to top</a>
+      </li>
+    </ul>
+    <p class="label site-footer__note">Built with Astro · Hosted on Cloudflare Pages</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    padding-block: 2rem;
+    background: var(--bg-sunken);
+  }
+
+  .site-footer__inner {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .site-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+  }
+
+  .site-footer__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    color: var(--text-muted);
+    font-family: var(--font-code);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .site-footer__links a:hover {
+    color: var(--accent-text);
+  }
+
+  @media (min-width: 56rem) {
+    .site-footer__inner {
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+    }
+
+    .site-footer__note {
+      text-align: right;
+    }
+  }
+</style>

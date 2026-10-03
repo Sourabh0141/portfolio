@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found — Sourabh Sharma" description="That page doesn’t exist.">
+  <section class="not-found">
+    <div class="container">
+      <p class="label label--accent">Error 404</p>
+      <h1>This page doesn’t exist.</h1>
+      <p>The link may be old or mistyped. Everything lives on the home page.</p>
+      <a class="btn btn--primary" href="/">
+        Back to the portfolio
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    display: grid;
+    min-height: 60vh;
+    place-items: center;
+    padding-block: var(--section-pad);
+  }
+
+  .container {
+    display: grid;
+    justify-items: start;
+    gap: 1.25rem;
+  }
+
+  h1 {
+    max-width: 16ch;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+  }
+
+  p:not(.label) {
+    max-width: 44ch;
+    color: var(--text-muted);
+  }
+</style>

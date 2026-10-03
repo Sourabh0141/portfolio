@@ -1,0 +1,263 @@
+---
+import { nav, profile } from '../data/site';
+import Icon from './Icon.astro';
+import ThemeToggle from './ThemeToggle.astro';
+---
+
+<header class="site-header">
+  <div class="container site-header__bar">
+    <a class="brand" href="#top" aria-label={`${profile.name} — back to top`}>
+      <span class="brand__mark" aria-hidden="true">
+        {profile.initials}
+      </span>
+      <span class="brand__name">{profile.name}</span>
+    </a>
+
+    <nav id="site-nav" class="site-nav" aria-label="Primary" data-nav>
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} data-nav-link>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <ThemeToggle />
+      <a class="btn btn--small header-resume" href={profile.resume.href} download>
+        Résumé
+      </a>
+      <button
+        type="button"
+        class="menu-btn"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        data-menu-button
+      >
+        <span class="menu-btn__open">
+          <Icon name="menu" size={22} />
+        </span>
+        <span class="menu-btn__close">
+          <Icon name="close" size={22} />
+        </span>
+        <span class="visually-hidden">Menu</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+
+  @supports (backdrop-filter: blur(10px)) {
+    .site-header {
+      background: var(--header-bg);
+      backdrop-filter: blur(14px);
+    }
+  }
+
+  .site-header__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0 1rem;
+    min-height: var(--header-h);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-height: 2.75rem;
+    text-decoration: none;
+  }
+
+  .brand__mark {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    color: var(--accent-text);
+    font-family: var(--font-head);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .brand__name {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .header-resume {
+    display: none;
+  }
+
+  .btn--small {
+    min-height: 2.75rem;
+    padding: 0.4rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  /* --- Navigation: without JS it is a plain scrollable row under the bar --- */
+  .site-nav {
+    order: 3;
+    flex-basis: 100%;
+    overflow-x: auto;
+    border-top: 1px solid var(--line);
+  }
+
+  .site-nav ul {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .site-nav a {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: 0.75rem;
+    color: var(--text-muted);
+    font-family: var(--font-code);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .site-nav a:hover,
+  .site-nav a[aria-current='true'] {
+    color: var(--accent-text);
+  }
+
+  .menu-btn {
+    display: none;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .menu-btn__close {
+    display: none;
+  }
+
+  /* --- Small screens with JS: a disclosure panel --- */
+  :global(html.js) .menu-btn {
+    display: grid;
+  }
+
+  :global(html.js) .site-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    order: 0;
+    overflow: visible;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      visibility 0s linear 0.2s;
+  }
+
+  :global(html.js) .site-nav[data-open] {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition-delay: 0s;
+  }
+
+  :global(html.js) .site-nav ul {
+    flex-direction: column;
+    gap: 0;
+    padding: 0.5rem var(--gutter) 1rem;
+  }
+
+  :global(html.js) .site-nav a {
+    min-height: 3.25rem;
+    padding-inline: 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.9375rem;
+  }
+
+  .menu-btn[aria-expanded='true'] .menu-btn__open {
+    display: none;
+  }
+
+  .menu-btn[aria-expanded='true'] .menu-btn__close {
+    display: grid;
+  }
+
+  @media (min-width: 40rem) {
+    .header-resume {
+      display: inline-flex;
+    }
+  }
+
+  /* --- Desktop: inline navigation --- */
+  @media (min-width: 56rem) {
+    .site-nav,
+    :global(html.js) .site-nav {
+      position: static;
+      order: 0;
+      flex: 1;
+      flex-basis: auto;
+      border: 0;
+      background: transparent;
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+      overflow: visible;
+    }
+
+    .site-nav ul,
+    :global(html.js) .site-nav ul {
+      flex-direction: row;
+      justify-content: center;
+      gap: 0.25rem;
+      padding: 0;
+    }
+
+    .site-nav a,
+    :global(html.js) .site-nav a {
+      min-height: 2.75rem;
+      padding-inline: 0.85rem;
+      border-bottom: 0;
+      font-size: 0.8125rem;
+    }
+
+    :global(html.js) .menu-btn {
+      display: none;
+    }
+  }
+</style>
