@@ -1,0 +1,7 @@
+dist/
+.astro/
+node_modules/
+.agents/
+docs/reference/
+package-lock.json
+public/
