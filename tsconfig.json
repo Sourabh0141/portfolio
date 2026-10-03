@@ -1,10 +1,21 @@
 {
+  // Inherit Astro's strictest type-checking preset for maximum safety and modern JS/TS defaults.
   "extends": "astro/tsconfigs/strictest",
+
+  // Include project source files as well as Astro's auto-generated types (content collections, assets, env).
   "include": [".astro/types.d.ts", "**/*"],
+
+  // Exclude compiled production artifacts and external package dependencies from type-checking.
   "exclude": ["dist", "node_modules"],
+
   "compilerOptions": {
+    // Provide global type definitions for Node.js runtime APIs used in build/utility scripts.
     "types": ["node"],
+
+    // Base directory for resolving non-relative module imports.
     "baseUrl": ".",
+
+    // Path aliases: map '@/*' directly to 'src/*' for clean imports (e.g. '@/components/Hero.astro').
     "paths": {
       "@/*": ["src/*"]
     }
