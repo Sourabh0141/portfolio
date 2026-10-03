@@ -12,5 +12,5 @@
   Cache-Control: public, max-age=31536000, immutable
 
 # Everything else revalidates so content edits go live immediately.
-/*.pdf
+/resume/*
   Cache-Control: public, max-age=0, must-revalidate

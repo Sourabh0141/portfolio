@@ -6,10 +6,8 @@ import ThemeToggle from './ThemeToggle.astro';
 
 <header class="site-header">
   <div class="container site-header__bar">
-    <a class="brand" href="#top" aria-label={`${profile.name} — back to top`}>
-      <span class="brand__mark" aria-hidden="true">
-        {profile.initials}
-      </span>
+    <a class="brand" href="#top">
+      <span class="brand__mark" aria-hidden="true" data-initials={profile.initials}></span>
       <span class="brand__name">{profile.name}</span>
     </a>
 
@@ -94,6 +92,12 @@ import ThemeToggle from './ThemeToggle.astro';
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.02em;
+  }
+
+  /* Initials are decorative: rendered as CSS content so they are not part of the link's name. */
+  .brand__mark::before {
+    content: attr(data-initials);
+    content: attr(data-initials) / '';
   }
 
   .brand__name {
