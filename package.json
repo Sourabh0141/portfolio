@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Personal portfolio of Sourabh Sharma \u00e2\u20ac\u201d static Astro site deployed to Cloudflare Pages.",
+  "description": "Personal portfolio of Sourabh Sharma â€” static Astro site deployed to Cloudflare Pages.",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -17,7 +17,7 @@
     "format:check": "prettier --check .",
     "og": "node scripts/generate-og.mjs",
     "validate": "npm run format:check && npm run lint && npm run check && npm run build",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name=sourabh"
+    "deploy": "npm run build && npx wrangler@4 pages deploy dist --project-name=sourabh --branch=main"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -34,7 +34,6 @@
     "prettier": "^3.9.9",
     "prettier-plugin-astro": "^1.1.0",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.71.0",
-    "wrangler": "^4.147.0"
+    "typescript-eslint": "^8.71.0"
   }
 }

@@ -6,9 +6,6 @@ export default defineConfig({
   site: SITE_URL,
   output: 'static',
   trailingSlash: 'never',
-  build: {
-    format: 'file',
-  },
   // No markdown content, and Shiki's inline styles are incompatible with the CSP.
   markdown: { syntaxHighlight: false },
   integrations: [sitemap()],

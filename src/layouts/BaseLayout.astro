@@ -8,9 +8,10 @@ import '../styles/global.css';
 export interface Props {
   title?: string | undefined;
   description?: string | undefined;
+  noindex?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -38,7 +39,7 @@ const { title, description } = Astro.props;
         root.setAttribute('data-theme', theme);
       })();
     </script>
-    <SeoHead title={title} description={description} />
+    <SeoHead title={title} description={description} noindex={noindex} />
     <Font cssVariable="--font-display" preload />
     <Font cssVariable="--font-body" preload />
     <Font cssVariable="--font-mono" />

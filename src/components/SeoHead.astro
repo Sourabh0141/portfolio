@@ -4,11 +4,19 @@ import { profile, seo, socials } from '../data/site';
 export interface Props {
   title?: string | undefined;
   description?: string | undefined;
+  /** Path used for the canonical URL. Ignored when `noindex` is set. */
+  path?: string;
+  noindex?: boolean;
 }
 
-const { title = seo.title, description = seo.description } = Astro.props;
+const {
+  title = seo.title,
+  description = seo.description,
+  path = '/',
+  noindex = false,
+} = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site);
+const canonical = new URL(path, Astro.site);
 const ogImage = new URL(seo.ogImage, Astro.site);
 
 const personSchema = {
@@ -31,8 +39,11 @@ const personSchema = {
 <title>{title}</title>
 <meta name="description" content={description} />
 <meta name="author" content={profile.name} />
-<link rel="canonical" href={canonical} />
-<meta name="robots" content="index, follow, max-image-preview:large" />
+{!noindex && <link rel="canonical" href={canonical} />}
+<meta
+  name="robots"
+  content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'}
+/>
 <meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)" />
 <meta name="theme-color" content="#faf7f2" media="(prefers-color-scheme: light)" />
 

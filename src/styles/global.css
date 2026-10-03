@@ -145,6 +145,11 @@ button {
   color: inherit;
 }
 
+/* Skip-link target is focused programmatically; it is not an interactive control. */
+main:focus {
+  outline: none;
+}
+
 ::selection {
   background: var(--accent);
   color: var(--on-accent);
