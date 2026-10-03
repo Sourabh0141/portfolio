@@ -138,6 +138,12 @@ import SectionHeading from '../SectionHeading.astro';
     justify-self: start;
   }
 
+  .contact__copy span:not([hidden]) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
   @media (min-width: 40rem) {
     .contact__list li {
       grid-template-columns: 1.5rem 7rem 1fr auto;
