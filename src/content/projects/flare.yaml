@@ -1,0 +1,38 @@
+title: Flare
+order: 1
+kind: Personal project · AI voice companion
+status: Live · invite-only
+featured: true
+summary: >-
+  A voice-first AI companion with a face. Hold a button, speak, and a stylised 3D character
+  listens, thinks and answers out loud with lip-synced speech — all orchestrated at the edge
+  on Cloudflare.
+highlights:
+  - Edge pipeline on a Cloudflare Worker (Hono) chaining Whisper speech-to-text, Llama 3.1 and
+    Kokoro text-to-speech, streaming audio back while metadata travels in response headers.
+  - Real-time lip-sync computed entirely in the browser — Web Audio FFT analysis drives 67 ARKit
+    blend shapes, with no server-side phoneme aligner.
+  - Rolling context summarisation keeps long conversations cheap, and D1 (SQLite) stores users,
+    threads and messages with cascading deletes.
+  - Provisioned with Terraform and shipped through GitHub Actions; the API is covered by
+    21 automated Vitest tests and strict TypeScript across the monorepo.
+flow:
+  - Push-to-talk in the browser
+  - Hono Worker on Cloudflare
+  - Whisper v3 Turbo (STT)
+  - Llama 3.1 8B (LLM)
+  - Kokoro (TTS)
+  - Lip-synced 3D avatar
+stack:
+  - Next.js 15
+  - React Three Fiber
+  - Hono
+  - Cloudflare Workers
+  - D1
+  - R2
+  - Clerk
+  - Terraform
+  - Vitest
+links:
+  - label: Visit Flare
+    url: https://flare-ai.pages.dev

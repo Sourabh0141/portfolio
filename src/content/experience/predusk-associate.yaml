@@ -1,0 +1,23 @@
+role: Associate Software Developer
+company: Predusk Technology Pvt Ltd
+location: Jaipur, India
+start: '2025-11'
+summary: >-
+  Backend and AI engineer on the Workplaceslm chatbot platform and the DADP annotation platform.
+groups:
+  - heading: Workplaceslm — RAG chatbot & AI services
+    points:
+      - Moved real-time chat from raw WebSockets to an EMQX MQTT broker, with a dedicated FastAPI
+        microservice and JWT authentication.
+      - Eliminated event-loop blocking by migrating psycopg2 and the MinIO SDK to asyncpg and
+        aioboto3.
+      - Streamed Celery deep-search results to users over MQTT instead of HTTP polling.
+      - Upgraded the deep-research pipeline from Agno to a multi-agent LangGraph architecture.
+      - Built Kokoro TTS and Faster-Whisper STT microservices for voice features.
+  - heading: DADP — Data Annotation & Delivery Platform
+    points:
+      - Replaced Server-Sent Events with a RabbitMQ and MQTT streaming service for reliable task
+        progress.
+      - Deployed a GPU-accelerated SAM 2.1 service that generates polygons from box or click
+        prompts.
+      - Built a YOLO11x and BoT-SORT video-tracking service to reduce manual annotation effort.

@@ -1,0 +1,32 @@
+title: Workplaceslm
+order: 2
+kind: Predusk · RAG chatbot & AI services
+status: Production · Predusk Technology
+summary: >-
+  A retrieval-augmented chatbot platform and its supporting AI services. I rebuilt the
+  real-time layer, removed event-loop blocking and upgraded the research pipeline.
+highlights:
+  - Replaced raw WebSockets with an EMQX MQTT broker and a dedicated FastAPI microservice using
+    JWT authentication for stable, persistent connections.
+  - Removed event-loop blocking by moving psycopg2 and the MinIO SDK to asyncpg and aioboto3.
+  - Offloaded compute-heavy deep search to Celery and streamed results to users over MQTT,
+    eliminating HTTP polling.
+  - Upgraded the deep-research pipeline from Agno to a multi-agent LangGraph design, and built
+    Kokoro text-to-speech and Faster-Whisper speech-to-text microservices for voice.
+flow:
+  - Chat client
+  - EMQX (MQTT)
+  - FastAPI service
+  - Celery workers
+  - LangGraph agents
+  - Results streamed back over MQTT
+stack:
+  - Python
+  - FastAPI
+  - MQTT / EMQX
+  - Celery
+  - LangGraph
+  - asyncpg
+  - MinIO
+  - Kokoro
+  - Faster-Whisper

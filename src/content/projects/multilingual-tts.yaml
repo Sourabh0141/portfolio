@@ -1,0 +1,21 @@
+title: Multilingual TTS Microservice
+order: 5
+kind: Personal project · Text-to-speech
+status: Dockerised service
+summary: >-
+  A standalone text-to-speech service on the Kokoro model with selectable languages and
+  multiple voices, plus a small Streamlit front end.
+highlights:
+  - Dynamic language selection and multi-voice generation behind a FastAPI interface.
+  - Containerised with Docker so it runs identically on any machine.
+flow:
+  - Streamlit front end
+  - FastAPI service
+  - Kokoro TTS
+  - Audio response
+stack:
+  - Python
+  - FastAPI
+  - Streamlit
+  - Kokoro
+  - Docker

@@ -1,0 +1,24 @@
+title: Oceanmind
+order: 4
+kind: Predusk · Web automation & scraping platform
+status: Production · Predusk Technology
+summary: >-
+  An automation engine that produces cruise quotations, replacing a manual workflow and
+  structuring free-text customer requests with an LLM.
+highlights:
+  - Migrated storage from SQLite and JSON files to PostgreSQL and MinIO.
+  - Moved scraping from Selenium to Playwright and replaced per-request browser instances with
+    isolated browser contexts, sharply reducing RAM use and improving speed.
+  - Integrated the Google Gemini API to parse unstructured special requests from customer
+    comments into structured data.
+flow:
+  - Quote request
+  - Playwright browser contexts
+  - Gemini request parsing
+  - PostgreSQL + MinIO
+stack:
+  - Python
+  - Playwright
+  - PostgreSQL
+  - MinIO
+  - Gemini API

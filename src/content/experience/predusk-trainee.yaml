@@ -1,0 +1,14 @@
+role: Data Analyst Trainee, AI & ML Engineering
+company: Predusk Technology Pvt Ltd
+location: Jaipur, India
+start: '2025-01'
+end: '2025-10'
+summary: Worked on the Oceanmind web-automation platform within the AI & ML engineering team.
+groups:
+  - heading: Oceanmind — web automation & scraping
+    points:
+      - Built an automation engine for cruise quotations that replaced manual work, and moved
+        storage from SQLite/JSON to PostgreSQL and MinIO.
+      - Migrated scraping from Selenium to Playwright, using isolated browser contexts instead of
+        a full browser per request to cut RAM use and speed things up.
+      - Integrated the Google Gemini API to structure free-text special requests from customers.
