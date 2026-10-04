@@ -1,0 +1,13 @@
+{
+  // Use single quotes for JavaScript and TypeScript code
+  singleQuote: true,
+
+  // Wrap lines at 100 characters for modern widescreen displays
+  printWidth: 100,
+
+  // Load the Astro formatting plugin to parse and format .astro components
+  plugins: ['prettier-plugin-astro'],
+
+  // Explicitly assign the astro parser to all .astro files
+  overrides: [{ files: '*.astro', options: { parser: 'astro' } }],
+}
