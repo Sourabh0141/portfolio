@@ -1,5 +1,13 @@
+# Build outputs & framework caches (Astro build artifacts and Cloudflare Wrangler cache)
 dist/
 .astro/
+.wrangler/
+
+# Third-party dependencies installed by npm (ignored by default, kept as an explicit guard)
 node_modules/
+
+# Machine-generated dependency lockfile (prevents git diff noise and formatting conflicts)
 package-lock.json
+
+# Static assets, media files, and Cloudflare configuration files (e.g. _headers)
 public/
