@@ -1,4 +1,8 @@
+# Enforce Unix LF line endings for all text files across Windows, macOS, and Linux
+# to prevent ghost diffs and formatting conflicts in CI/CD runners.
 * text=auto eol=lf
+
+# Explicitly mark binary assets to prevent line-ending conversion and corrupting byte edits.
 *.pdf binary
 *.png binary
 *.woff2 binary
