@@ -1,23 +1,28 @@
-# build output
+# Build outputs & framework caches
 dist/
 .astro/
-
-# dependencies
-node_modules/
-
-# logs
-npm-debug.log*
-
-# env / secrets
-.env
-.env.*
-!.env.example
-.dev.vars
 .wrangler/
 
+# Third-party dependencies
+node_modules/
 
-# os / editor
+# Logs
+*.log
+
+# Environment variables & local secrets
+.env
+.env.*
+.dev.vars
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Operating system metadata
 .DS_Store
 Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+
+# Editor & IDE configurations
 .vscode/*
 !.vscode/extensions.json
