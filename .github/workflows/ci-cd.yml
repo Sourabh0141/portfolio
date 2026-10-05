@@ -1,0 +1,98 @@
+# Pull requests are built and checked only.
+# A push to main, or a manual run from main, also deploys the built site.
+name: CI/CD
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One run per branch. A new commit on a pull request cancels the older check.
+# A push to main does not cancel a deploy already in progress: that upload is
+# left to finish, and only the latest queued run is kept.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# The default token can read this repository and nothing else.
+# Deploy adds deployments: write so GitHub can record the production release.
+permissions:
+  contents: read
+
+env:
+  # Cloudflare Pages project name. Keep in sync with SITE_URL in src/site.config.ts.
+  PAGES_PROJECT: sourabh
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # The build does not read git history.
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # Installs the lockfile as written. Fails if package.json and the lockfile disagree.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run check
+
+      - name: Build site
+        run: npm run build
+
+      # Each job starts on a clean machine. Save dist only when Deploy will run.
+      - name: Upload build artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist
+          retention-days: 1
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy
+    # Production is published from main only. Pull requests stop after Build.
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: production
+      url: https://sourabh.pages.dev
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist
+
+      # Credentials come from repository secrets, not from this file.
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ env.PAGES_PROJECT }} --branch=main
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
