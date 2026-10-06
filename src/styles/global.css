@@ -1,9 +1,4 @@
-/* ==========================================================================
-   Design tokens
-   Dark is the default; the OS preference is honoured, and an explicit
-   choice (data-theme on <html>) always wins.
-   ========================================================================== */
-
+/* Tokens. Dark is the default. */
 :root {
   color-scheme: dark;
 
@@ -22,6 +17,7 @@
   --focus: #ffc174;
   --header-bg: rgb(12 12 12 / 0.82);
 
+  /* Names come from Astro's font config. The stacks after them are the fallback. */
   --font-sans: var(--font-body), system-ui, sans-serif;
   --font-head: var(--font-display), system-ui, sans-serif;
   --font-code: var(--font-mono), ui-monospace, monospace;
@@ -33,6 +29,8 @@
   --header-h: 4rem;
 }
 
+/* OS light preference. Skipped when data-theme="dark", so an explicit dark choice wins.
+   Accent, hover, and on-accent are inherited from :root. */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme='dark']) {
     color-scheme: light;
@@ -44,13 +42,13 @@
     --text: #1b1815;
     --text-muted: #57514a;
     --text-faint: #6c655c;
-    --accent-hover: #ffb02e;
     --accent-text: #8a5200;
     --focus: #8a5200;
     --header-bg: rgb(250 247 242 / 0.85);
   }
 }
 
+/* Chosen light theme. Same tokens as the OS block, independent of the OS preference. */
 :root[data-theme='light'] {
   color-scheme: light;
   --bg: #faf7f2;
@@ -61,15 +59,10 @@
   --text: #1b1815;
   --text-muted: #57514a;
   --text-faint: #6c655c;
-  --accent-hover: #ffb02e;
   --accent-text: #8a5200;
   --focus: #8a5200;
   --header-bg: rgb(250 247 242 / 0.85);
 }
-
-/* ==========================================================================
-   Base
-   ========================================================================== */
 
 *,
 *::before,
@@ -77,9 +70,11 @@
   box-sizing: border-box;
 }
 
+/* Elements. */
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* In-page links stop below the sticky header. */
   scroll-padding-top: calc(var(--header-h) + 1rem);
   background: var(--bg);
 }
@@ -92,6 +87,7 @@ html {
 
 body {
   margin: 0;
+  /* 100vh first, then 100dvh where supported, so mobile browser chrome is excluded. */
   min-height: 100vh;
   min-height: 100dvh;
   background: var(--bg);
@@ -128,7 +124,7 @@ ol {
   list-style: none;
 }
 
-img,
+/* Inline SVG sits on the text baseline and leaves a gap underneath. */
 svg {
   display: block;
   max-width: 100%;
@@ -145,7 +141,7 @@ button {
   color: inherit;
 }
 
-/* Skip-link target is focused programmatically; it is not an interactive control. */
+/* The skip link focuses main. It is not a control, so it draws no focus ring. */
 main:focus {
   outline: none;
 }
@@ -160,10 +156,7 @@ main:focus {
   outline-offset: 3px;
 }
 
-/* ==========================================================================
-   Layout & shared patterns
-   ========================================================================== */
-
+/* Shared patterns. */
 .container {
   width: min(100% - 2 * var(--gutter), var(--content));
   margin-inline: auto;
@@ -174,6 +167,7 @@ main:focus {
   border-top: 1px solid var(--line);
 }
 
+/* Hidden on screen and still announced. display: none would remove it from the accessibility tree. */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -186,6 +180,7 @@ main:focus {
   border: 0;
 }
 
+/* Parked off-screen until keyboard focus. */
 .skip-link {
   position: fixed;
   top: 0.75rem;
@@ -273,8 +268,8 @@ main:focus {
   line-height: 1.5;
 }
 
-/* Reveal-on-scroll. Content stays visible without JS, and a CSS fallback
-   reveals it anyway if the script never runs. */
+/* Hidden only after JS adds .js, and only when motion is allowed.
+   The fallback animation reveals the content if .is-visible never arrives. */
 @media (prefers-reduced-motion: no-preference) {
   html.js .reveal {
     opacity: 0;
