@@ -94,9 +94,9 @@ import ThemeToggle from './ThemeToggle.astro';
     letter-spacing: 0.02em;
   }
 
-  /* Initials are decorative: rendered as CSS content so they are not part of the link's name. */
   .brand__mark::before {
     content: attr(data-initials);
+    /* Empty alternative text, so the link name is the visible name and not "SS" as well. */
     content: attr(data-initials) / '';
   }
 
@@ -123,7 +123,7 @@ import ThemeToggle from './ThemeToggle.astro';
     font-size: 0.875rem;
   }
 
-  /* --- Navigation: without JS it is a plain scrollable row under the bar --- */
+  /* Without JavaScript the links stay in a row and the menu button stays hidden. */
   .site-nav {
     order: 3;
     flex-basis: 100%;
@@ -170,7 +170,7 @@ import ThemeToggle from './ThemeToggle.astro';
     display: none;
   }
 
-  /* --- Small screens with JS: a disclosure panel --- */
+  /* With JavaScript, a narrow screen turns that row into a panel opened by the menu button. */
   :global(html.js) .menu-btn {
     display: grid;
   }
@@ -228,7 +228,7 @@ import ThemeToggle from './ThemeToggle.astro';
     }
   }
 
-  /* --- Desktop: inline navigation --- */
+  /* 56rem is the desktop width shared with main.ts. The panel styles are undone and the button is hidden. */
   @media (min-width: 56rem) {
     .site-nav,
     :global(html.js) .site-nav {

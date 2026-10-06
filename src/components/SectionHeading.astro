@@ -1,10 +1,10 @@
 ---
 export interface Props {
-  /** Two-digit section index shown in the eyebrow, e.g. "01". */
+  /** Eyebrow number, for example "01". It is not a heading level. */
   index: string;
   eyebrow: string;
   title: string;
-  /** id applied to the <h2>, referenced by the section's aria-labelledby. */
+  /** On the h2. The parent section names itself with aria-labelledby pointing here. */
   id: string;
 }
 

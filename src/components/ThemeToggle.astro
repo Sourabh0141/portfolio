@@ -31,12 +31,12 @@ import Icon from './Icon.astro';
     color: var(--accent-text);
   }
 
-  /* Without JavaScript there is nothing to toggle. */
+  /* Hidden without JavaScript: the button would have nothing to do. */
   :global(html:not(.js)) .theme-toggle {
     display: none;
   }
 
-  /* Show the icon of the theme you would switch *to*. */
+  /* The icon is the theme a click would switch to, not the theme already showing. */
   .theme-toggle__sun,
   .theme-toggle__moon {
     display: none;

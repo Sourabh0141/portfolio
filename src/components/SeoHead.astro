@@ -4,7 +4,7 @@ import { profile, seo, socials } from '../data/site';
 export interface Props {
   title?: string | undefined;
   description?: string | undefined;
-  /** Path used for the canonical URL. Ignored when `noindex` is set. */
+  /** Canonical path. Left off the page when `noindex` is set. */
   path?: string;
   noindex?: boolean;
 }
@@ -67,4 +67,5 @@ const personSchema = {
 <meta name="twitter:image" content={ogImage} />
 <meta name="twitter:image:alt" content={seo.ogImageAlt} />
 
+{/* Inline data, not a bundled script. Crawlers read this block as written. */}
 <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
