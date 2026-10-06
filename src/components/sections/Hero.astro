@@ -1,64 +1,59 @@
 ---
 import { profile, socials } from '../../data/site';
-import HeroDiagram from '../HeroDiagram.astro';
 import Icon from '../Icon.astro';
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <div class="container hero__grid">
-    <div>
-      <p class="label label--accent hero__eyebrow">
-        <span class="hero__dot" aria-hidden="true"></span>
-        {profile.role} · {profile.specialty}
-      </p>
+  <div class="container hero__content">
+    <p class="label label--accent hero__eyebrow">
+      <span class="hero__dot" aria-hidden="true"></span>
+      {profile.role} · {profile.specialty}
+    </p>
 
-      <h1 id="hero-title" class="hero__title">
-        {/* profile.name is one string. The break is set here so the two names stay on their own lines. */}
-        Sourabh
-        <br />
-        Sharma
-      </h1>
+    <h1 id="hero-title" class="hero__title">
+      {/* profile.name is one string. The break is set here so the two names stay on their own lines. */}
+      Sourabh
+      <br />
+      Sharma
+    </h1>
 
-      <p class="hero__headline">{profile.headline}</p>
-      <p class="hero__lead">{profile.lead}</p>
+    <p class="hero__headline">{profile.headline}</p>
+    <p class="hero__lead">{profile.lead}</p>
 
-      <div class="hero__actions">
-        <a class="btn btn--primary" href="#contact">
-          Get in touch
-          <Icon name="mail" size={18} />
-        </a>
-        <a class="btn" href={profile.resume.href} download>
-          Download résumé
-          <Icon name="download" size={18} />
-        </a>
-      </div>
-
-      <ul class="hero__links">
-        {socials.map((s) => (
-          <li>
-            <a href={s.url} rel="noopener noreferrer" target="_blank">
-              <Icon name={s.id} size={18} />
-              {s.label}
-              <span class="visually-hidden"> (opens in a new tab)</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-
-      <dl class="hero__meta">
-        <div>
-          <dt class="label">Based in</dt>
-          <dd>{profile.location}</dd>
-        </div>
-        <div>
-          <dt class="label">Currently</dt>
-          {/* Shorter than profile.employer, which is the legal company name. */}
-          <dd>Associate Software Developer, Predusk</dd>
-        </div>
-      </dl>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="#contact">
+        Get in touch
+        <Icon name="mail" size={18} />
+      </a>
+      <a class="btn" href={profile.resume.href} download>
+        Download résumé
+        <Icon name="download" size={18} />
+      </a>
     </div>
 
-    <HeroDiagram />
+    <ul class="hero__links">
+      {socials.map((s) => (
+        <li>
+          <a href={s.url} rel="noopener noreferrer" target="_blank">
+            <Icon name={s.id} size={18} />
+            {s.label}
+            <span class="visually-hidden"> (opens in a new tab)</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <dl class="hero__meta">
+      <div>
+        <dt class="label">Based in</dt>
+        <dd>{profile.location}</dd>
+      </div>
+      <div>
+        <dt class="label">Currently</dt>
+        {/* Shorter than profile.employer, which is the legal company name. */}
+        <dd>Associate Software Developer, Predusk</dd>
+      </div>
+    </dl>
   </div>
 </section>
 
@@ -67,9 +62,8 @@ import Icon from '../Icon.astro';
     padding-block: clamp(3rem, 8vw, 6.5rem) clamp(3.5rem, 8vw, 6rem);
   }
 
-  .hero__grid {
-    display: grid;
-    gap: 3rem;
+  .hero__content {
+    max-width: 54rem;
   }
 
   .hero__eyebrow {
@@ -95,7 +89,7 @@ import Icon from '../Icon.astro';
   }
 
   .hero__headline {
-    max-width: 28ch;
+    max-width: 38ch;
     margin-bottom: 1rem;
     font-family: var(--font-head);
     font-size: clamp(1.35rem, 3.6vw, 2rem);
@@ -105,7 +99,7 @@ import Icon from '../Icon.astro';
   }
 
   .hero__lead {
-    max-width: 52ch;
+    max-width: 54ch;
     margin-bottom: 2rem;
     color: var(--text-muted);
     font-size: clamp(1rem, 2.2vw, 1.125rem);
@@ -161,13 +155,6 @@ import Icon from '../Icon.astro';
     .hero__meta {
       grid-auto-flow: column;
       justify-content: start;
-    }
-  }
-
-  @media (min-width: 60rem) {
-    .hero__grid {
-      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
-      gap: clamp(2rem, 5vw, 4.5rem);
     }
   }
 </style>
