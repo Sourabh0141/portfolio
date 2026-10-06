@@ -1,7 +1,11 @@
 ---
+// Astro writes this page to 404.html. The host serves it for any path that does not exist.
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
+{/*
+  noindex keeps this URL out of search results. follow still allows the link home to be crawled.
+*/}
 <BaseLayout title="Page not found — Sourabh Sharma" description="That page doesn’t exist." noindex>
   <section class="not-found">
     <div class="container">
@@ -16,6 +20,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <style>
+  /* Center the message in the space under the header. */
   .not-found {
     display: grid;
     min-height: 60vh;
@@ -29,11 +34,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     gap: 1.25rem;
   }
 
+  /* About two short lines, at any viewport width. */
   h1 {
     max-width: 16ch;
     font-size: clamp(2.5rem, 8vw, 4.5rem);
   }
 
+  /* The label above keeps its accent color. Only this sentence is muted. */
   p:not(.label) {
     max-width: 44ch;
     color: var(--text-muted);
