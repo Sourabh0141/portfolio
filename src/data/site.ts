@@ -15,7 +15,7 @@ export const profile = {
   phone: { display: '+91 89055 95681', href: '+918905595681' },
   employer: 'Predusk Technology Pvt Ltd',
   /** Served from `public/resume/`. Replace the file, keep the name. */
-  resume: { href: '/resume/Sourabh-Sharma-Resume.pdf', label: 'Résumé (PDF)' },
+  resume: { href: '/resume/Sourabh-Sharma-Resume.pdf', label: 'Resume (PDF)' },
 } as const;
 
 export const socials = [
