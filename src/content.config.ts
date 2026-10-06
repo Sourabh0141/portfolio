@@ -25,8 +25,6 @@ const projects = defineCollection({
     status: z.string(),
     summary: z.string(),
     highlights: z.array(z.string()).min(1),
-    /** Drawn as a diagram, which needs at least three steps. */
-    flow: z.array(z.string()).min(3),
     stack: z.array(z.string()).min(1),
     /** Omitted in YAML when the project has no public URL. */
     links: z.array(link).default([]),

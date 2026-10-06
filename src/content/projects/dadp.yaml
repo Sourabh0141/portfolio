@@ -12,12 +12,6 @@ highlights:
     bounding-box or click prompts into polygon coordinates.
   - Built an automated video-tracking service using YOLO11x detection, YOLO11x-cls appearance
     embeddings and BoT-SORT to follow objects across frames.
-flow:
-  - Annotation UI
-  - FastAPI + Celery tasks
-  - SAM 2.1 / YOLO11x + BoT-SORT
-  - RabbitMQ + MQTT events
-  - Live progress to the annotator
 stack:
   - Python
   - FastAPI

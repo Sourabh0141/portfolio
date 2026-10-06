@@ -13,13 +13,6 @@ highlights:
     eliminating HTTP polling.
   - Upgraded the deep-research pipeline from Agno to a multi-agent LangGraph design, and built
     Kokoro text-to-speech and Faster-Whisper speech-to-text microservices for voice.
-flow:
-  - Chat client
-  - EMQX (MQTT)
-  - FastAPI service
-  - Celery workers
-  - LangGraph agents
-  - Results streamed back over MQTT
 stack:
   - Python
   - FastAPI

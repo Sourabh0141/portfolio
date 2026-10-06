@@ -1,7 +1,5 @@
 ---
-// A featured project moves the flow into a side column. The others keep a wrapping row.
 import type { CollectionEntry } from 'astro:content';
-import FlowDiagram from './FlowDiagram.astro';
 import Icon from './Icon.astro';
 
 export interface Props {
@@ -9,13 +7,10 @@ export interface Props {
 }
 
 const { project } = Astro.props;
-const { title, kind, status, summary, highlights, flow, stack, links, featured } = project.data;
+const { title, kind, status, summary, highlights, stack, links } = project.data;
 ---
 
-<article
-  class:list={['card', 'reveal', { 'card--featured': featured }]}
-  aria-labelledby={`project-${project.id}`}
->
+<article class="card reveal" aria-labelledby={`project-${project.id}`}>
   <div class="card__main">
     <header class="card__header">
       <p class="label">{kind}</p>
@@ -27,8 +22,6 @@ const { title, kind, status, summary, highlights, flow, stack, links, featured }
     </header>
 
     <p class="card__summary">{summary}</p>
-
-    {!featured && <FlowDiagram steps={flow} variant="wrap" title={title} />}
 
     <ul class="card__highlights">
       {highlights.map((h) => (
@@ -56,12 +49,6 @@ const { title, kind, status, summary, highlights, flow, stack, links, featured }
       </ul>
     )}
   </div>
-
-  {featured && (
-    <aside class="card__aside">
-      <FlowDiagram steps={flow} variant="stack" title={title} />
-    </aside>
-  )}
 </article>
 
 <style>
@@ -139,20 +126,5 @@ const { title, kind, status, summary, highlights, flow, stack, links, featured }
     flex-wrap: wrap;
     gap: 0.75rem;
     margin-top: 0.25rem;
-  }
-
-  .card__aside {
-    align-self: start;
-    padding: 1.25rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--bg-sunken);
-  }
-
-  @media (min-width: 60rem) {
-    .card--featured {
-      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-      gap: clamp(2rem, 4vw, 3.5rem);
-    }
   }
 </style>

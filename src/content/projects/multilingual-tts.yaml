@@ -8,11 +8,6 @@ summary: >-
 highlights:
   - Dynamic language selection and multi-voice generation behind a FastAPI interface.
   - Containerised with Docker so it runs identically on any machine.
-flow:
-  - Streamlit front end
-  - FastAPI service
-  - Kokoro TTS
-  - Audio response
 stack:
   - Python
   - FastAPI

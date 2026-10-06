@@ -11,11 +11,6 @@ highlights:
     isolated browser contexts, sharply reducing RAM use and improving speed.
   - Integrated the Google Gemini API to parse unstructured special requests from customer
     comments into structured data.
-flow:
-  - Quote request
-  - Playwright browser contexts
-  - Gemini request parsing
-  - PostgreSQL + MinIO
 stack:
   - Python
   - Playwright

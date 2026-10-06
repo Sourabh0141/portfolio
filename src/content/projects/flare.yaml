@@ -16,13 +16,6 @@ highlights:
     threads and messages with cascading deletes.
   - Provisioned with Terraform and shipped through GitHub Actions; the API is covered by
     21 automated Vitest tests and strict TypeScript across the monorepo.
-flow:
-  - Push-to-talk in the browser
-  - Hono Worker on Cloudflare
-  - Whisper v3 Turbo (STT)
-  - Llama 3.1 8B (LLM)
-  - Kokoro (TTS)
-  - Lip-synced 3D avatar
 stack:
   - Next.js 15
   - React Three Fiber
