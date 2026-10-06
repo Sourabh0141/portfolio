@@ -1,10 +1,8 @@
-/**
- * Progressive enhancement for the portfolio. Every feature here is optional:
- * the page is fully usable and readable without this script.
- */
-
+// Optional behavior for the portfolio. The page stays usable if this script never runs.
 const root = document.documentElement;
 
+// The inline script in BaseLayout sets data-theme before first paint.
+// This function only handles a later click, and the button's accessible name.
 function initTheme(): void {
   const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
   if (!button) return;
@@ -20,7 +18,7 @@ function initTheme(): void {
     try {
       localStorage.setItem('theme', next);
     } catch {
-      /* storage unavailable: the choice simply lasts for this visit */
+      // localStorage can throw in private mode. The choice then lasts for this visit.
     }
     syncLabel();
   });
@@ -41,7 +39,7 @@ function initNav(): void {
 
   button.addEventListener('click', () => setOpen(!isOpen()));
 
-  // Close after choosing a destination, on Escape, or when tapping outside.
+  // Close after a link is chosen, on Escape, or when the pointer goes outside.
   nav.addEventListener('click', (event) => {
     if ((event.target as Element).closest('a')) setOpen(false);
   });
@@ -56,11 +54,10 @@ function initNav(): void {
     if (isOpen() && !nav.contains(target) && !button.contains(target)) setOpen(false);
   });
 
-  // Reset when resizing up to the desktop layout.
+  // 56rem is the header's desktop breakpoint. An open phone menu must not survive that resize.
   window.matchMedia('(min-width: 56rem)').addEventListener('change', () => setOpen(false));
 }
 
-/** Marks the nav link of the section currently in view. */
 function initScrollSpy(): void {
   if (!('IntersectionObserver' in window)) return;
 
@@ -68,6 +65,8 @@ function initScrollSpy(): void {
   const byId = new Map<string, HTMLAnchorElement>();
   for (const link of links) byId.set(link.hash.slice(1), link);
 
+  // Shrink the observed band so the current link is the section in the middle of the screen,
+  // not one that is merely touching the top or bottom edge.
   const observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
@@ -85,6 +84,7 @@ function initScrollSpy(): void {
   }
 }
 
+// The status element is an aria-live region. The button text change alone is not announced.
 function initCopy(): void {
   const status = document.querySelector<HTMLElement>('[data-copy-status]');
 
@@ -116,6 +116,8 @@ function initCopy(): void {
   }
 }
 
+// .reveal is hidden only when html has .js. Without IntersectionObserver, show every item
+// immediately so reduced-support browsers are not left with invisible content.
 function initReveal(): void {
   const items = document.querySelectorAll<HTMLElement>('.reveal');
   if (!('IntersectionObserver' in window)) {
