@@ -28,6 +28,7 @@ import SectionHeading from '../SectionHeading.astro';
           <a class="contact__value" href={`mailto:${profile.email}`}>
             {profile.email}
           </a>
+          {/* main.ts copies data-copy. The live region below announces success or failure. */}
           <button
             type="button"
             class="btn btn--small contact__copy"
@@ -57,6 +58,7 @@ import SectionHeading from '../SectionHeading.astro';
               <Icon name={s.id} />
             </span>
             <span class="label">{s.label}</span>
+            {/* Visible text drops the scheme and www. The href stays absolute. */}
             <a class="contact__value" href={s.url} rel="noopener noreferrer" target="_blank">
               {s.url.replace('https://', '').replace('www.', '').replace(/\/$/, '')}
               <span class="visually-hidden"> (opens in a new tab)</span>

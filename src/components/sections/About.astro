@@ -28,6 +28,7 @@ import SectionHeading from '../SectionHeading.astro';
             {focusAreas.map((area, i) => (
               <li>
                 <span class="about__num" aria-hidden="true">
+                  {/* Visual only. The words beside the number are what get announced. */}
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 {area}
@@ -65,6 +66,7 @@ import SectionHeading from '../SectionHeading.astro';
     line-height: 1.6;
   }
 
+  /* The opening paragraph stays at full contrast. The ones after it are secondary. */
   .about__text p:first-child {
     color: var(--text);
   }

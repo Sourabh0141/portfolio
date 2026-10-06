@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import ProjectCard from '../ProjectCard.astro';
 import SectionHeading from '../SectionHeading.astro';
 
+// Featured cards stay full width. The rest share a grid.
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 const featured = projects.filter((p) => p.data.featured);
 const others = projects.filter((p) => !p.data.featured);
@@ -47,6 +48,7 @@ const others = projects.filter((p) => !p.data.featured);
       align-items: stretch;
     }
 
+    /* .card is scoped inside ProjectCard, so :global is required to reach it. */
     .work__grid > :global(.card) {
       height: 100%;
     }

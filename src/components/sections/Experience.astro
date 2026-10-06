@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import { formatRange } from '../../lib/format';
 import SectionHeading from '../SectionHeading.astro';
 
-// Newest first; `start` is a sortable YYYY-MM string.
+// Newest first. start is YYYY-MM, so a string compare is also chronological.
 const roles = (await getCollection('experience')).sort((a, b) =>
   b.data.start.localeCompare(a.data.start),
 );
