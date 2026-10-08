@@ -9,6 +9,10 @@ node_modules/
 # Logs
 *.log
 
+# Temporary files
+tmp/*
+!tmp/.gitkeep
+
 # Environment variables & local secrets
 .env
 .env.*
