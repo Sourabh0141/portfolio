@@ -1,0 +1,37 @@
+title: Digilekh
+order: 3
+kind: Enterprise platform · Document intelligence & audit automation
+status: Live · Multi-tenant SaaS
+featured: false
+summary: >-
+  An enterprise document intelligence and RAG platform with self-hosted GPU inference and
+  specialized audit review packs (contractor bill validation, treasury reconciliation). Engineered
+  the 9-stage asynchronous ingestion pipeline, non-blocking backend migration, and speech integration.
+highlights:
+  - >-
+    Engineered a 9-stage Celery ingestion pipeline processing scanned and digital PDFs via Surya
+    OCR, page-level chunking, and hybrid dense/sparse vector upserts into Qdrant.
+  - >-
+    Led the non-blocking async migration across 3 core microservices using SQLAlchemy 2 async
+    (asyncpg), aioboto3, and httpx, eliminating event loop starvation under high concurrency.
+  - >-
+    Integrated self-hosted GPU speech microservices using Faster-Whisper (speech-to-text) and
+    Kokoro-82M (neural text-to-speech) with TTL memory caching for real-time voice interactions.
+  - >-
+    Implemented a centralized Redis caching layer with tenant-isolated invalidation and unified
+    chunk indexing across core API, ingestion, and retrieval services.
+stack:
+  - FastAPI
+  - SQLAlchemy 2 (Async)
+  - Celery
+  - Qdrant
+  - Surya OCR
+  - Faster-Whisper
+  - Kokoro TTS
+  - PostgreSQL
+  - Redis
+  - RabbitMQ
+  - Next.js
+links:
+  - label: Visit Digilekh
+    url: https://digilekh.predusk.ai

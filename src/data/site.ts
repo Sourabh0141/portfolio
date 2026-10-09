@@ -7,10 +7,10 @@ export const profile = {
   name: 'Sourabh Sharma',
   initials: 'SS',
   role: 'Software Engineer',
-  specialty: 'AI & backend systems',
+  specialty: 'Backend Systems, Applied AI & Cloud Architecture',
   location: 'Jaipur, India',
-  headline: 'I build the backend and AI services behind real-time products.',
-  lead: 'Async Python APIs, event-driven messaging and model-serving microservices — from vision and speech models to RAG chatbots, taken from prototype to production.',
+  headline: 'I architect distributed backends, real-time messaging, and production AI systems.',
+  lead: 'From leading cross-cloud client platforms and event-driven data pipelines to deploying vision, speech, and edge AI companions — engineered for low latency, zero blocking I/O, and resilience under load.',
   email: 'sourabh.sharma0141@gmail.com',
   phone: { display: '+91 89055 95681', href: '+918905595681' },
   employer: 'Predusk Technology Pvt Ltd',
@@ -28,11 +28,11 @@ export const socials = [
 ] as const;
 
 export const seo = {
-  title: 'Sourabh Sharma — Software Engineer, AI & Backend Systems',
+  title: 'Sourabh Sharma — Software Engineer, Backend Systems & Applied AI',
   description:
-    'Portfolio of Sourabh Sharma, a Jaipur-based software engineer building async Python backends, real-time messaging and AI/ML services — including Flare, a voice-first AI companion on Cloudflare.',
+    'Portfolio of Sourabh Sharma, a software engineer leading cross-cloud client platforms and architecting async Python backends, real-time messaging (RabbitMQ, MQTT), and production AI systems — including Caliber, Labelfort, Digilekh, and Flare.',
   ogImage: '/og.png',
-  ogImageAlt: 'Sourabh Sharma — Software Engineer, AI and backend systems',
+  ogImageAlt: 'Sourabh Sharma — Software Engineer, Backend Systems & Applied AI',
 } as const;
 
 export const nav = [
@@ -44,56 +44,87 @@ export const nav = [
 ] as const;
 
 export const focusAreas = [
-  'Async Python and FastAPI services',
-  'Real-time messaging with MQTT and RabbitMQ',
-  'Vision, speech and LLM pipelines in production',
-  'Edge deployments on Cloudflare',
+  'High-throughput async Python & FastAPI microservices',
+  'Event-driven architectures with RabbitMQ and MQTT',
+  'Computer vision, speech & RAG pipelines in production',
+  'Cross-cloud & serverless edge deployments (GCP, AWS, Cloudflare)',
 ] as const;
 
 export const about = [
-  'I’m a software engineer at Predusk Technology in Jaipur, working across Python backends and applied AI. Day to day that means FastAPI microservices, real-time messaging, and putting vision, speech and language models into production.',
-  'I like replacing the fragile parts of a system — polling, blocking calls, a full browser per request — with architecture that holds up under load. Outside work I build and ship small products end to end, such as Flare, a voice companion that runs on Cloudflare’s edge.',
+  'I’m a software engineer at Predusk Technology in Jaipur, leading offshore client engineering and architecting distributed backend and applied AI systems. My day-to-day work spans asynchronous Python microservices, real-time event streaming with RabbitMQ and MQTT, and putting production vision, speech, and retrieval models into high-volume workflows across Google Cloud and AWS.',
+  'I focus on engineering out the fragile parts of a system — eliminating synchronous bottlenecks with non-blocking I/O (asyncpg, aioboto3), replacing poll loops with push-based broker topologies, and enforcing strict multi-tenancy and data integrity. Outside client work, I build end-to-end systems such as ArchiveLens (historical newspaper layout segmentation and search) and Flare, an edge-native voice companion running on Cloudflare.',
 ] as const;
 
 export const skills = [
   {
     heading: 'Languages',
-    items: ['Python', 'JavaScript', 'SQL'],
+    items: ['Python', 'TypeScript', 'JavaScript', 'SQL'],
   },
   {
     heading: 'AI & machine learning',
     items: [
+      'vLLM',
+      'Surya OCR',
+      'SAM 2.1',
+      'YOLO11x',
+      'BoT-SORT',
+      'Faster-Whisper',
+      'Kokoro TTS',
+      'Qdrant',
+      'RAG Pipelines',
       'LangGraph',
       'Gemini API',
-      'vLLM',
-      'RAG',
-      'YOLO11x',
-      'SAM 2.1',
-      'BoT-SORT',
-      'OCR',
-      'Kokoro TTS',
-      'Faster-Whisper',
     ],
   },
   {
-    heading: 'Backend',
-    items: ['FastAPI', 'Celery', 'REST APIs', 'JWT'],
+    heading: 'Backend & APIs',
+    items: [
+      'FastAPI',
+      'SQLAlchemy (Async)',
+      'Celery',
+      'Pydantic v2',
+      'Hono',
+      'Uvicorn',
+      'REST APIs',
+      'JWT & OAuth2',
+    ],
   },
   {
     heading: 'Messaging & real-time',
-    items: ['MQTT (EMQX)', 'RabbitMQ', 'WebSockets'],
+    items: [
+      'RabbitMQ (Web-STOMP)',
+      'MQTT (EMQX / Web-MQTT)',
+      'WebSockets',
+      'Server-Sent Events (SSE)',
+      'aio-pika',
+    ],
   },
   {
     heading: 'Data & storage',
-    items: ['PostgreSQL', 'asyncpg', 'Redis', 'SQLite', 'MinIO', 'S3'],
+    items: [
+      'PostgreSQL (asyncpg)',
+      'Redis',
+      'BigQuery',
+      'OpenSearch',
+      'MinIO & S3 (aioboto3)',
+      'DynamoDB',
+      'Cloudflare D1',
+    ],
   },
   {
-    heading: 'Frontend',
-    items: ['Next.js', 'Streamlit', 'HTML & CSS'],
+    heading: 'Cloud & infrastructure',
+    items: [
+      'Terraform',
+      'Google Cloud (Functions, Workflows)',
+      'AWS (CDK, Lambda, S3, Cognito)',
+      'Cloudflare (Workers, Pages, R2)',
+      'Docker',
+      'Linux',
+    ],
   },
   {
-    heading: 'DevOps & automation',
-    items: ['Docker', 'Linux deployments', 'Git & GitHub', 'Playwright', 'Selenium'],
+    heading: 'Automation & testing',
+    items: ['Playwright', 'Pytest', 'Vitest', 'GitHub Actions CI/CD', 'FFmpeg'],
   },
 ] as const;
 

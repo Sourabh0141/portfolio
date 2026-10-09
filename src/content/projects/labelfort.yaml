@@ -1,0 +1,39 @@
+title: Labelfort
+order: 2
+kind: Commercial product · AI data annotation & delivery platform
+status: Live · Enterprise
+featured: true
+summary: >-
+  A multi-tenant platform for producing high-precision ML training data across 8 media types
+  (images, video, audio, DICOM, 3D point clouds). Engineered the real-time event distribution
+  platform, computer vision AI microservices, and automated synthetic data generation.
+highlights:
+  - >-
+    Replaced polling and SSE with a centralized RabbitMQ topic exchange and Web-MQTT streaming
+    gateway over WebSockets, delivering real-time progress for 5 event domains with token-based
+    RBAC topic filtering.
+  - >-
+    Integrated GPU-accelerated computer vision microservices: interactive click/box polygon
+    segmentation via Segment Anything (SAM 2.1) and multi-object video tracking via YOLO11x with
+    BoT-SORT.
+  - >-
+    Engineered the Synthetic Data Designer module from prompt-driven generation to direct
+    persistence, schema validation, preview, and CSV machine-learning export.
+  - >-
+    Eliminated upload bottlenecks with browser-direct presigned S3/MinIO multipart uploads,
+    SHA-256 duplicate detection before transfer, and resume checkpoints.
+stack:
+  - FastAPI
+  - SQLAlchemy (Async)
+  - RabbitMQ (MQTT)
+  - Celery
+  - SAM 2.1
+  - YOLO11x
+  - BoT-SORT
+  - PostgreSQL
+  - Redis
+  - MinIO
+  - Next.js
+links:
+  - label: Visit Labelfort
+    url: https://www.labelfort.ai

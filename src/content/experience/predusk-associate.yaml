@@ -3,21 +3,59 @@ company: Predusk Technology Pvt Ltd
 location: Jaipur, India
 start: '2025-11'
 summary: >-
-  Backend and AI engineer on the Workplaceslm chatbot platform and the DADP annotation platform.
+  Leading client backend and cloud engineering from India while architecting distributed systems,
+  event-driven streaming, and production AI services across enterprise platforms.
 groups:
-  - heading: Workplaceslm — RAG chatbot & AI services
+  - heading: Caliber — Cross-Cloud Social Video Platform & Data Engine
     points:
-      - Moved real-time chat from raw WebSockets to an EMQX MQTT broker, with a dedicated FastAPI
-        microservice and JWT authentication.
-      - Eliminated event-loop blocking by migrating psycopg2 and the MinIO SDK to asyncpg and
-        aioboto3.
-      - Streamed Celery deep-search results to users over MQTT instead of HTTP polling.
-      - Upgraded the deep-research pipeline from Agno to a multi-agent LangGraph architecture.
-      - Built Kokoro TTS and Faster-Whisper STT microservices for voice features.
-  - heading: DADP — Data Annotation & Delivery Platform
+      - >-
+        Led offshore engineering from India across Google Cloud and AWS, integrating BigQuery
+        analytics, Cloud Functions, and the Wire newsroom application.
+      - >-
+        Engineered keyless AWS-to-GCP Workload Identity Federation, allowing AWS Lambda services to
+        query BigQuery catalogs without static service account keys.
+      - >-
+        Decomposed automated tagging into modular Cloud Functions with LLM classification and guarded
+        SQL MERGE write-backs to preserve editorial input.
+      - >-
+        Built an automated video transcription pipeline with time-budgeted async worker pools, jitter
+        retry backoff, and idempotent BigQuery job management.
+  - heading: Labelfort — Multi-Tenant AI Data Annotation Platform
     points:
-      - Replaced Server-Sent Events with a RabbitMQ and MQTT streaming service for reliable task
-        progress.
-      - Deployed a GPU-accelerated SAM 2.1 service that generates polygons from box or click
-        prompts.
-      - Built a YOLO11x and BoT-SORT video-tracking service to reduce manual annotation effort.
+      - >-
+        Replaced polling and SSE with a RabbitMQ topic exchange and Web-MQTT gateway over WebSockets,
+        delivering real-time progress for 5 event domains with role-based topic filtering.
+      - >-
+        Integrated GPU-accelerated microservices: click/box polygon segmentation via SAM 2.1 and
+        multi-object video tracking via YOLO11x with BoT-SORT.
+      - >-
+        Engineered the Synthetic Data Designer module from prompt generation to direct persistence,
+        live preview, and CSV machine-learning export.
+      - >-
+        Built browser-direct presigned S3/MinIO multipart uploads with SHA-256 duplicate detection
+        and resume checkpoints.
+  - heading: Digilekh — Document Intelligence & Audit Automation Platform
+    points:
+      - >-
+        Engineered a 9-stage Celery ingestion pipeline with Surya OCR, page-level chunking, and hybrid
+        dense/sparse vector indexing in Qdrant.
+      - >-
+        Led the non-blocking async migration across 3 core microservices using SQLAlchemy 2 async
+        (asyncpg), aioboto3, and httpx to eliminate event loop starvation.
+      - >-
+        Integrated self-hosted Faster-Whisper (STT) and Kokoro-82M (TTS) microservices with TTL
+        caching for voice interactions and read-aloud features.
+      - >-
+        Built a centralized Redis caching layer and unified chunk index with tenant-isolated
+        invalidation.
+  - heading: ArchiveLens — Historical Newspaper AI & Search
+    points:
+      - >-
+        Built an end-to-end pipeline cutting scanned Hindi newspaper pages into articles using instance
+        segmentation, 12-pass Shapely polygon refinement, and Surya OCR on vLLM.
+      - >-
+        Implemented OCR loop defence using zlib compression ratio checks (<0.06) and temperature
+        escalation to eliminate repetitive hallucinations on dense Devanagari text.
+      - >-
+        Designed an OpenSearch search index with ICU transliteration and custom Hindi analyzers
+        supporting transliterated queries.

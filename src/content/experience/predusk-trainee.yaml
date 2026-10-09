@@ -3,12 +3,26 @@ company: Predusk Technology Pvt Ltd
 location: Jaipur, India
 start: '2025-01'
 end: '2025-10'
-summary: Worked on the Oceanmind web-automation platform within the AI & ML engineering team.
+summary: >-
+  Engineered web automation and data extraction systems within the AI & ML engineering team,
+  focusing on browser automation, non-blocking data layers, and internal productivity tooling.
 groups:
-  - heading: Oceanmind — web automation & scraping
+  - heading: OceanMind — High-Throughput Travel Portal Automation
     points:
-      - Built an automation engine for cruise quotations that replaced manual work, and moved
-        storage from SQLite/JSON to PostgreSQL and MinIO.
-      - Migrated scraping from Selenium to Playwright, using isolated browser contexts instead of
-        a full browser per request to cut RAM use and speed things up.
-      - Integrated the Google Gemini API to structure free-text special requests from customers.
+      - >-
+        Architected parallel browser execution using Playwright Chromium: shared long-lived headless
+        instances with isolated per-cabin BrowserContexts running concurrently via asyncio.gather.
+      - >-
+        Migrated database and object storage layers from blocking synchronous drivers to non-blocking
+        asyncpg and aioboto3 connection pools.
+      - >-
+        Built real-time execution log streaming via Server-Sent Events (SSE) with strict per-user
+        log isolation and cancellation mechanics.
+      - >-
+        Implemented an auditable human-in-the-loop validation flow, capturing automated multi-step
+        screenshots and compressed video evidence (FFmpeg) stored in MinIO.
+  - heading: Internal Tooling & Workflow Automation
+    points:
+      - >-
+        Developed PV InstaTemplate, an end-to-end Chrome extension and API service with SQLite and an
+        admin dashboard used by back-office operations for template automation.

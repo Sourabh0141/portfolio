@@ -1,19 +1,33 @@
-title: Oceanmind
-order: 4
-kind: Predusk · Web automation & scraping platform
-status: Production · Predusk Technology
+title: OceanMind
+order: 5
+kind: Commercial automation · Travel portal quoting engine
+status: Production · Predusk
+featured: false
 summary: >-
-  An automation engine that produces cruise quotations, replacing a manual workflow and
-  structuring free-text customer requests with an LLM.
+  A high-throughput browser automation engine that automates cruise pricing and commission calculations
+  across 5 travel-agent supplier portals. Replaced slow, manual quoting workflows with parallel
+  headless Chromium execution, live streaming telemetry, and human-in-the-loop verification.
 highlights:
-  - Migrated storage from SQLite and JSON files to PostgreSQL and MinIO.
-  - Moved scraping from Selenium to Playwright and replaced per-request browser instances with
-    isolated browser contexts, sharply reducing RAM use and improving speed.
-  - Integrated the Google Gemini API to parse unstructured special requests from customer
-    comments into structured data.
+  - >-
+    Architected parallel browser execution using Playwright Chromium: shared long-lived headless
+    instances with isolated per-cabin BrowserContexts running concurrently via asyncio.gather.
+  - >-
+    Migrated the data access and media layer to non-blocking asynchronous I/O using connection-pooled
+    asyncpg and aioboto3 client pools, removing event loop bottlenecks.
+  - >-
+    Streamed real-time execution logs and progress bars to the Next.js frontend via Server-Sent
+    Events (SSE) with strict per-user log isolation and cancellation mechanics.
+  - >-
+    Implemented an auditable human-in-the-loop validation flow, capturing multi-step screenshots
+    and compressed video evidence (FFmpeg) stored in MinIO for review.
 stack:
-  - Python
-  - Playwright
-  - PostgreSQL
-  - MinIO
-  - Gemini API
+  - FastAPI
+  - Playwright (Async)
+  - Chromium
+  - PostgreSQL (asyncpg)
+  - MinIO (aioboto3)
+  - Redis
+  - Server-Sent Events
+  - FFmpeg
+  - Next.js
+links: []

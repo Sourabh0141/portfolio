@@ -1,31 +1,35 @@
 title: Flare
-order: 1
-kind: Personal project · AI voice companion
-status: Live · invite-only
-featured: true
+order: 4
+kind: Personal project · Voice-first 3D AI companion
+status: Live · Invite-only
+featured: false
 summary: >-
-  A voice-first AI companion with a face. Hold a button, speak, and a stylised 3D character
-  listens, thinks and answers out loud with lip-synced speech — all orchestrated at the edge
-  on Cloudflare.
+  An edge-native, voice-first AI companion featuring an expressive 3D character that listens, thinks,
+  and speaks with synchronized lip movements. Orchestrates STT, LLM generation, and neural TTS with
+  streaming SSE and in-browser spectral analysis on Cloudflare serverless edge.
 highlights:
-  - Edge pipeline on a Cloudflare Worker (Hono) chaining Whisper speech-to-text, Llama 3.1 and
-    Kokoro text-to-speech, streaming audio back while metadata travels in response headers.
-  - Real-time lip-sync computed entirely in the browser — Web Audio FFT analysis drives 67 ARKit
-    blend shapes, with no server-side phoneme aligner.
-  - Rolling context summarisation keeps long conversations cheap, and D1 (SQLite) stores users,
-    threads and messages with cascading deletes.
-  - Provisioned with Terraform and shipped through GitHub Actions; the API is covered by
-    21 automated Vitest tests and strict TypeScript across the monorepo.
+  - >-
+    Pipelined Whisper Large v3 Turbo, Llama 3.1 8B, and Kokoro 82M TTS over streaming Server-Sent
+    Events with sentence-level overlapping audio synthesis to minimize conversational turn latency.
+  - >-
+    Engineered zero-server-overhead 60 FPS lip-sync running entirely in the browser using Web Audio
+    API FFT spectral analysis driving 67 ARKit blend shapes on React Three Fiber.
+  - >-
+    Implemented dual-engine Voice Activity Detection (adaptive room noise floor tracking with
+    echo-guarding plus Silero neural VAD) allowing natural user interruptions (barge-in).
+  - >-
+    Architected as an edge monorepo using Next.js 16, Hono on Cloudflare Workers, D1 (SQLite), and
+    R2 storage, provisioned via Terraform with GitHub Actions CI/CD.
 stack:
-  - Next.js 15
+  - Next.js 16
   - React Three Fiber
   - Hono
   - Cloudflare Workers
-  - D1
+  - D1 (SQLite)
   - R2
-  - Clerk
+  - Web Audio API
   - Terraform
-  - Vitest
+  - Clerk
 links:
   - label: Visit Flare
     url: https://flare-ai.pages.dev
