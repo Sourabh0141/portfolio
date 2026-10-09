@@ -8,24 +8,24 @@ Two-sentence version: "The portfolio is a zero-runtime static site built with As
 
 ## 2. Problem and purpose
 
-| Problem | How the system addresses it |
-| :--- | :--- |
-| Modern portfolio websites are often bloated with heavy SPA/React runtimes (>500 kB JS bundles) for essentially static content | Static Site Generation (SSG) with Astro compiles everything to static HTML/CSS; client-side JS is reduced to a single ~5 kB vanilla script for optional enhancements |
-| Flash of Unstyled Theme (FOUC) when toggling or persisting dark/light modes | Synchronous inline micro-script in `<head>` resolves `localStorage` or `prefers-color-scheme` before the first paint, applying `data-theme` to `<html>` |
-| Unstructured, fragile portfolio content embedded directly in presentation markup | Content-as-data architecture: YAML files in `src/content/` validated at build-time against strict Zod schemas via Astro Content Collections |
-| External font dependencies (e.g. Google Fonts) create third-party network hops, privacy leaks, and Layout Shifts (CLS) | Self-hosted variable fonts (`Space Grotesk`, `Inter`, `JetBrains Mono`) served via Fontsource with critical font preloading in `<head>` |
-| Inaccessible web patterns (missing landmarks, unannounced clipboard states, broken focus traps) | Strict accessibility architecture conforming to `jsx-a11y-strict`, including semantic landmarks, skip links (`#main` with `tabindex="-1"`), and ARIA live regions |
-| Security vulnerabilities (XSS, clickjacking, inline code injection) on static hosts | Strict Content Security Policy (CSP) with cryptographic SHA-256 script hashing, `object-src 'none'`, and hardened Cloudflare edge headers (`DENY`, HSTS, restrictive `Permissions-Policy`) |
-| Dynamic Open Graph card generation adding browser dependencies to CI builds | Offline headless Playwright script (`scripts/generate-og.mjs`) renders high-resolution OG images from HTML templates and commits them, keeping CI builds fast and browserless |
+| Problem                                                                                                                       | How the system addresses it                                                                                                                                                                |
+| :---------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Modern portfolio websites are often bloated with heavy SPA/React runtimes (>500 kB JS bundles) for essentially static content | Static Site Generation (SSG) with Astro compiles everything to static HTML/CSS; client-side JS is reduced to a single ~5 kB vanilla script for optional enhancements                       |
+| Flash of Unstyled Theme (FOUC) when toggling or persisting dark/light modes                                                   | Synchronous inline micro-script in `<head>` resolves `localStorage` or `prefers-color-scheme` before the first paint, applying `data-theme` to `<html>`                                    |
+| Unstructured, fragile portfolio content embedded directly in presentation markup                                              | Content-as-data architecture: YAML files in `src/content/` validated at build-time against strict Zod schemas via Astro Content Collections                                                |
+| External font dependencies (e.g. Google Fonts) create third-party network hops, privacy leaks, and Layout Shifts (CLS)        | Self-hosted variable fonts (`Space Grotesk`, `Inter`, `JetBrains Mono`) served via Fontsource with critical font preloading in `<head>`                                                    |
+| Inaccessible web patterns (missing landmarks, unannounced clipboard states, broken focus traps)                               | Strict accessibility architecture conforming to `jsx-a11y-strict`, including semantic landmarks, skip links (`#main` with `tabindex="-1"`), and ARIA live regions                          |
+| Security vulnerabilities (XSS, clickjacking, inline code injection) on static hosts                                           | Strict Content Security Policy (CSP) with cryptographic SHA-256 script hashing, `object-src 'none'`, and hardened Cloudflare edge headers (`DENY`, HSTS, restrictive `Permissions-Policy`) |
+| Dynamic Open Graph card generation adding browser dependencies to CI builds                                                   | Offline headless Playwright script (`scripts/generate-og.mjs`) renders high-resolution OG images from HTML templates and commits them, keeping CI builds fast and browserless              |
 
 **Who uses it:**
 
-| Actor | What they do |
-| :--- | :--- |
-| Public visitor / Recruiter / Hiring manager | Browses professional experience, reviews engineering case studies, copies contact info, switches themes, and downloads resume |
-| Engineer / Author (Sourabh Sharma) | Updates project YAML collections, updates resume PDF, or adjusts profile configuration without touching UI component templates |
-| Search engine crawlers / Social bots | Scrapes semantic HTML, follows XML sitemap index, parses Open Graph / Twitter cards, and indexes Schema.org `Person` JSON-LD |
-| CI/CD Pipeline (GitHub Actions) | Verifies formatting (Prettier), lints (ESLint), validates types (`astro check`), builds static assets, and pushes production release to Cloudflare Pages |
+| Actor                                       | What they do                                                                                                                                             |
+| :------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Public visitor / Recruiter / Hiring manager | Browses professional experience, reviews engineering case studies, copies contact info, switches themes, and downloads resume                            |
+| Engineer / Author (Sourabh Sharma)          | Updates project YAML collections, updates resume PDF, or adjusts profile configuration without touching UI component templates                           |
+| Search engine crawlers / Social bots        | Scrapes semantic HTML, follows XML sitemap index, parses Open Graph / Twitter cards, and indexes Schema.org `Person` JSON-LD                             |
+| CI/CD Pipeline (GitHub Actions)             | Verifies formatting (Prettier), lints (ESLint), validates types (`astro check`), builds static assets, and pushes production release to Cloudflare Pages |
 
 ## 3. Features
 
@@ -73,28 +73,29 @@ Two-sentence version: "The portfolio is a zero-runtime static site built with As
                                                                              +-------------------------+
 ```
 
-| Component | Responsibility |
-| :--- | :--- |
-| `BaseLayout.astro` | Root HTML shell, meta headers, inline anti-FOUC theme script, font preloading (display and body preloaded; mono deferred), skip link, header, main landmark, footer, and script injection |
-| `SeoHead.astro` | Resolves canonical links, title/description fallbacks, Open Graph tags, Twitter card tags, and Schema.org `Person` JSON-LD |
-| `SiteHeader.astro` | Sticky header bar, initials monogram, primary navigation links with scroll-spy markers, theme toggle, resume CTA, and mobile hamburger button |
-| `SiteFooter.astro` | Bottom navigation, dynamic copyright year evaluation at build time, social links, back-to-top anchor, and hosting credits |
-| `SectionHeading.astro` | Standardized indexed section headers (e.g. `01 / Selected work`) with accessibility IDs |
-| `ProjectCard.astro` | Full-width or grid card rendering project kind, title, status indicator dot, summary, bullet highlights, stack badges, and outbound links |
-| `ThemeToggle.astro` | Dual sun/moon SVG icon button styled with CSS transitions; hidden when JavaScript is disabled |
-| `Icon.astro` | Vector icon dictionary rendering accessible, stroked SVG shapes (GitHub, LinkedIn, Mail, Phone, Sun, Moon, Copy, Check, Menu, Close, etc.) |
-| `Hero.astro` | Opening viewport banner: status pill, display headline, career lead, action buttons (Contact CTA, Resume download), and metadata list |
-| `Work.astro` | Queries `projects` collection, partitions items into featured (full-width) vs non-featured (two-column grid), and maps to `ProjectCard` |
-| `Experience.astro` | Queries `experience` collection, sorts chronologically descending, formats dates via `formatRange`, and displays grouped achievements |
-| `Skills.astro` | Renders skill groups (Languages, AI/ML, Backend, Messaging, Data, Frontend, DevOps) from `site.ts` in a responsive 3-column badge grid |
-| `About.astro` | Multi-paragraph engineering philosophy, numbered focus areas, and formal educational background credentials |
-| `Contact.astro` | Direct contact channels (Email, Phone, LinkedIn, GitHub, Resume), asynchronous copy action, and hidden ARIA live status region |
-| `404.astro` | Error 404 page providing graceful recovery link back to the homepage; configured with `noindex, follow` |
-| `robots.txt.ts` | Dynamic endpoint serving valid plain-text crawler instructions with absolute sitemap URL derived from `site.config.ts` |
+| Component              | Responsibility                                                                                                                                                                            |
+| :--------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BaseLayout.astro`     | Root HTML shell, meta headers, inline anti-FOUC theme script, font preloading (display and body preloaded; mono deferred), skip link, header, main landmark, footer, and script injection |
+| `SeoHead.astro`        | Resolves canonical links, title/description fallbacks, Open Graph tags, Twitter card tags, and Schema.org `Person` JSON-LD                                                                |
+| `SiteHeader.astro`     | Sticky header bar, initials monogram, primary navigation links with scroll-spy markers, theme toggle, resume CTA, and mobile hamburger button                                             |
+| `SiteFooter.astro`     | Bottom navigation, dynamic copyright year evaluation at build time, social links, back-to-top anchor, and hosting credits                                                                 |
+| `SectionHeading.astro` | Standardized indexed section headers (e.g. `01 / Selected work`) with accessibility IDs                                                                                                   |
+| `ProjectCard.astro`    | Full-width or grid card rendering project kind, title, status indicator dot, summary, bullet highlights, stack badges, and outbound links                                                 |
+| `ThemeToggle.astro`    | Dual sun/moon SVG icon button styled with CSS transitions; hidden when JavaScript is disabled                                                                                             |
+| `Icon.astro`           | Vector icon dictionary rendering accessible, stroked SVG shapes (GitHub, LinkedIn, Mail, Phone, Sun, Moon, Copy, Check, Menu, Close, etc.)                                                |
+| `Hero.astro`           | Opening viewport banner: status pill, display headline, career lead, action buttons (Contact CTA, Resume download), and metadata list                                                     |
+| `Work.astro`           | Queries `projects` collection, partitions items into featured (full-width) vs non-featured (two-column grid), and maps to `ProjectCard`                                                   |
+| `Experience.astro`     | Queries `experience` collection, sorts chronologically descending, formats dates via `formatRange`, and displays grouped achievements                                                     |
+| `Skills.astro`         | Renders skill groups (Languages, AI/ML, Backend, Messaging, Data, Frontend, DevOps) from `site.ts` in a responsive 3-column badge grid                                                    |
+| `About.astro`          | Multi-paragraph engineering philosophy, numbered focus areas, and formal educational background credentials                                                                               |
+| `Contact.astro`        | Direct contact channels (Email, Phone, LinkedIn, GitHub, Resume), asynchronous copy action, and hidden ARIA live status region                                                            |
+| `404.astro`            | Error 404 page providing graceful recovery link back to the homepage; configured with `noindex, follow`                                                                                   |
+| `robots.txt.ts`        | Dynamic endpoint serving valid plain-text crawler instructions with absolute sitemap URL derived from `site.config.ts`                                                                    |
 
 ### 4.2 Content Pipeline and Schema Contracts
 
 Astro's content loader validates every YAML file at build and development time against Zod schemas in `src/content.config.ts`:
+
 - **`projects`**: Validates project entries. Enforces required strings (`title`, `kind`, `status`, `summary`), integer display order (`order`), non-empty string arrays (`highlights`, `stack`), optional boolean flag (`featured`, defaulting to `false`), and structured link objects (`label`, `url` requiring absolute HTTP/HTTPS format).
 - **`experience`**: Validates career milestones. Enforces `role`, `company`, `location`, strict ISO date strings (`start` matching `/^\d{4}-\d{2}$/`, optional `end` matching `/^\d{4}-\d{2}$/`), a role overview `summary`, and a non-empty array of structured `groups` (`heading`, array of `points`).
 - **`site.ts`**: Centralized typed configuration object (`as const`) storing singleton profile data (`name`, `role`, `headline`, `lead`, `email`, `phone`, `employer`, `resume`), navigation entries, SEO defaults, focus areas, categorized skills, and education details.
@@ -109,6 +110,7 @@ Astro's content loader validates every YAML file at build and development time a
 ### 4.4 Progressive Enhancement and Client Runtime
 
 The client-side bundle in `src/scripts/main.ts` is strictly additive. If the user disables JavaScript or the script fails to load, all content remains visible, links work via native browser anchor scrolling, and the resume is downloadable.
+
 1. **`initTheme`**: Handles theme toggle clicks, toggling `data-theme` between `light` and `dark`, updating `localStorage`, and synchronizing `aria-label` for screen reader users.
 2. **`initNav`**: Toggles mobile navigation open/closed state via `data-open` and `aria-expanded`. Listens for navigation link clicks, `Escape` keypress, outside clicks, and media query breakpoint changes (`min-width: 56rem`) to automatically collapse the mobile drawer.
 3. **`initScrollSpy`**: Leverages `IntersectionObserver` with an offset viewport window (`rootMargin: '-35% 0px -60% 0px'`). Dynamically updates `aria-current="true"` on the matching header link as the user scrolls through page sections.
@@ -117,17 +119,17 @@ The client-side bundle in `src/scripts/main.ts` is strictly additive. If the use
 
 ## 5. Technology stack
 
-| Layer | Technology |
-| :--- | :--- |
-| **Framework & Engine** | Astro 7.3.5 (Static Site Generator, Content Collections, `@astrojs/sitemap`) |
-| **Language & Typing** | TypeScript 6.0 (`astro/tsconfigs/strictest`, `@astrojs/check`) |
-| **Styling & Design Tokens** | Vanilla CSS (CSS Custom Properties, Fluid `clamp()`, Dual Color Scheme) |
-| **Typography** | Fontsource variable fonts (`Space Grotesk`, `Inter`, `JetBrains Mono`) via `fontProviders.fontsource()` |
-| **Validation & Schema** | Zod (via `astro/zod` in `src/content.config.ts`) |
-| **Code Quality & Linting** | ESLint 9 (`typescript-eslint`, `eslint-plugin-astro`, `eslint-plugin-jsx-a11y`), Prettier (`prettier-plugin-astro`) |
-| **Automation & Tooling** | Playwright (headless browser for automated OG image snapshotting) |
-| **Hosting & Edge Delivery** | Cloudflare Pages (Global Anycast CDN, Custom Edge Headers) |
-| **CI/CD** | GitHub Actions (`actions/checkout`, `actions/setup-node`, `cloudflare/wrangler-action`) |
+| Layer                       | Technology                                                                                                          |
+| :-------------------------- | :------------------------------------------------------------------------------------------------------------------ |
+| **Framework & Engine**      | Astro 7.3.5 (Static Site Generator, Content Collections, `@astrojs/sitemap`)                                        |
+| **Language & Typing**       | TypeScript 6.0 (`astro/tsconfigs/strictest`, `@astrojs/check`)                                                      |
+| **Styling & Design Tokens** | Vanilla CSS (CSS Custom Properties, Fluid `clamp()`, Dual Color Scheme)                                             |
+| **Typography**              | Fontsource variable fonts (`Space Grotesk`, `Inter`, `JetBrains Mono`) via `fontProviders.fontsource()`             |
+| **Validation & Schema**     | Zod (via `astro/zod` in `src/content.config.ts`)                                                                    |
+| **Code Quality & Linting**  | ESLint 9 (`typescript-eslint`, `eslint-plugin-astro`, `eslint-plugin-jsx-a11y`), Prettier (`prettier-plugin-astro`) |
+| **Automation & Tooling**    | Playwright (headless browser for automated OG image snapshotting)                                                   |
+| **Hosting & Edge Delivery** | Cloudflare Pages (Global Anycast CDN, Custom Edge Headers)                                                          |
+| **CI/CD**                   | GitHub Actions (`actions/checkout`, `actions/setup-node`, `cloudflare/wrangler-action`)                             |
 
 ## 6. Cross-cutting subsystems
 
@@ -158,6 +160,7 @@ The client-side bundle in `src/scripts/main.ts` is strictly additive. If the use
 ### 6.4 Continuous Integration and Deployment (CI/CD)
 
 The `.github/workflows/ci-cd.yml` workflow enforces a strict release pipeline:
+
 1. **Concurrency Controls**: Uses `concurrency` groups keyed by workflow and branch. PR builds cancel outmoded runs, while `main` deploys finish sequentially.
 2. **Build Job**: Executes on `ubuntu-latest`. Enforces Node.js version matching `.nvmrc`, runs clean `npm ci`, checks formatting (`prettier --check`), lints code (`eslint .`), runs type verification (`astro check`), and builds production output (`astro build`).
 3. **Artifact Transfer**: On successful compilation of the `main` branch, the `dist` directory is uploaded as a pipeline artifact.
@@ -194,14 +197,14 @@ The `.github/workflows/ci-cd.yml` workflow enforces a strict release pipeline:
 
 ## 9. Glossary
 
-| Term | Meaning |
-| :--- | :--- |
-| **SSG (Static Site Generation)** | Pre-compiling web pages into static HTML, CSS, and JS files during the build step rather than on per-request server invocation. |
-| **FOUC (Flash of Unstyled Content / Theme)** | An undesirable glitch where a page renders with default styling or colors for a split-second before the user's preferred theme stylesheet or script loads. |
-| **Astro Content Collections** | Astro's typed content system that organizes file-based content (YAML/Markdown) and validates frontmatter against strict Zod schemas. |
-| **CSP (Content Security Policy)** | An HTTP header and browser security mechanism that restricts the resources (scripts, images, stylesheets) the browser is allowed to load for a given page. |
-| **Progressive Enhancement** | A web design strategy that provides essential content and functionality to all web browsers first, while layering richer features (scripts, animations) for browsers that support them. |
-| **Scroll-Spy** | A navigation pattern where the active link updates automatically based on the user's scroll position in the viewport. |
-| **Live Region (`aria-live`)** | A DOM element that announces dynamic text updates to screen readers without requiring the user to navigate to that element. |
-| **HSTS (HTTP Strict Transport Security)** | A security header informing browsers that the domain should only ever be accessed using HTTPS. |
-| **Fontsource** | An open-source collection of self-hosted npm packages for open-source fonts, eliminating dependencies on Google Fonts CDNs. |
+| Term                                         | Meaning                                                                                                                                                                                 |
+| :------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **SSG (Static Site Generation)**             | Pre-compiling web pages into static HTML, CSS, and JS files during the build step rather than on per-request server invocation.                                                         |
+| **FOUC (Flash of Unstyled Content / Theme)** | An undesirable glitch where a page renders with default styling or colors for a split-second before the user's preferred theme stylesheet or script loads.                              |
+| **Astro Content Collections**                | Astro's typed content system that organizes file-based content (YAML/Markdown) and validates frontmatter against strict Zod schemas.                                                    |
+| **CSP (Content Security Policy)**            | An HTTP header and browser security mechanism that restricts the resources (scripts, images, stylesheets) the browser is allowed to load for a given page.                              |
+| **Progressive Enhancement**                  | A web design strategy that provides essential content and functionality to all web browsers first, while layering richer features (scripts, animations) for browsers that support them. |
+| **Scroll-Spy**                               | A navigation pattern where the active link updates automatically based on the user's scroll position in the viewport.                                                                   |
+| **Live Region (`aria-live`)**                | A DOM element that announces dynamic text updates to screen readers without requiring the user to navigate to that element.                                                             |
+| **HSTS (HTTP Strict Transport Security)**    | A security header informing browsers that the domain should only ever be accessed using HTTPS.                                                                                          |
+| **Fontsource**                               | An open-source collection of self-hosted npm packages for open-source fonts, eliminating dependencies on Google Fonts CDNs.                                                             |
