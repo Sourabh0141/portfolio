@@ -62,14 +62,11 @@ export default defineConfig({
     csp: {
       // Automatically calculate cryptographic SHA-256 hashes for authorized inline scripts (e.g. anti-FOUC theme script).
       algorithm: 'SHA-256',
-      scriptDirective: {
-        resources: ["'self'", 'https://static.cloudflareinsights.com'],
-      },
       directives: [
         "default-src 'self'",
         "img-src 'self' data:",
         "font-src 'self'",
-        "connect-src 'self' https://cloudflareinsights.com",
+        "connect-src 'self'",
         "object-src 'none'",
         "base-uri 'self'",
         "form-action 'none'",
