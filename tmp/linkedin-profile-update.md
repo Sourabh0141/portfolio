@@ -217,13 +217,13 @@ ArchiveLens | Historical newspaper AI and search
 
 ### 6.2 Data Analyst Trainee (AI & ML Engineering)
 
-| Field           | Value                                                               |
-| :-------------- | :------------------------------------------------------------------ |
-| Title           | Data Analyst Trainee (AI & ML Engineering)                          |
-| Employment type | Full-time                                                           |
-| Company         | Predusk Technology Private Limited                                  |
-| Location        | Jaipur, Rajasthan, India · On-site                                  |
-| Dates           | Start date from your Predusk records – Oct 2025                     |
+| Field           | Value                                           |
+| :-------------- | :---------------------------------------------- |
+| Title           | Data Analyst Trainee (AI & ML Engineering)      |
+| Employment type | Full-time                                       |
+| Company         | Predusk Technology Private Limited              |
+| Location        | Jaipur, Rajasthan, India · On-site              |
+| Dates           | Start date from your Predusk records – Oct 2025 |
 
 Description. Length: 922 of 2,000 characters.
 
@@ -494,7 +494,6 @@ One short post every week or two, drawn from work already done. Do not include c
 1. Why Labelfort moved real-time progress from SSE to a RabbitMQ topic exchange with Web-MQTT, and what role-based topic filtering solved.
 2. How ArchiveLens detects an OCR model stuck in a repetition loop using a compression ratio.
 3. How Workload Identity Federation removes static keys between AWS and Google Cloud.
-
 
 ---
 
