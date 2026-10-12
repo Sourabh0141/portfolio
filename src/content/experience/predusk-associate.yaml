@@ -59,3 +59,11 @@ groups:
       - >-
         Designed an OpenSearch search index with ICU transliteration and custom Hindi analyzers
         supporting transliterated queries.
+  - heading: Sankirtan — Moderated Community Event Platform
+    points:
+      - >-
+        Designed and built the async FastAPI backend as sole author, with a compare-and-swap
+        moderation state machine enforced by PostgreSQL CHECK constraints.
+      - >-
+        Hardened anonymous submissions with three-stage image verification, HMAC-hashed IP rate
+        limiting, and Argon2 with HttpOnly JWT cookie admin authentication.

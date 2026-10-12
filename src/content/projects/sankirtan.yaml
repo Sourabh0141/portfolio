@@ -1,0 +1,36 @@
+title: Sankirtan
+order: 7
+kind: Community platform · Moderated devotional event listings
+status: Backend · Sole author
+featured: false
+summary: >-
+  A community platform where the public submits devotional gatherings (kirtan, satsang, meditation)
+  with a poster image and a single administrator moderates them before they are listed. Designed
+  and built the entire async backend: data model, API contract, security design, migrations, and
+  integration tests.
+highlights:
+  - >-
+    Implemented the moderation state machine as compare-and-swap UPDATE ... RETURNING statements
+    backed by PostgreSQL CHECK constraints, keeping duplicate and racing requests safe without
+    explicit row locks.
+  - >-
+    Hardened the unauthenticated upload endpoint with three-stage image verification (MIME
+    allow-list, detected-format match, full Pillow decode) running on bounded worker threads off
+    the event loop.
+  - >-
+    Built privacy-preserving rate limiting for submissions and logins using HMAC-SHA256 keyed IP
+    hashes counted from existing tables, storing no raw addresses and needing no separate counter
+    store.
+  - >-
+    Secured admin access with Argon2 hashing and HttpOnly JWT cookies, and shipped idempotent SQL
+    migrations through an advisory-locked runner alongside an HTTP-level integration test suite.
+stack:
+  - FastAPI
+  - SQLAlchemy 2 (Async)
+  - PostgreSQL (asyncpg)
+  - MinIO (aioboto3)
+  - Pydantic v2
+  - Argon2
+  - JWT
+  - Pillow
+links: []
