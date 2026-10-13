@@ -1,0 +1,76 @@
+% =============================================================================
+% resume-software-engineer-ai-products.tex
+% Target titles: Software Engineer, Product Engineer or Backend Engineer at
+% companies whose product is an AI system.
+% Leads with product features shipped end to end around AI models.
+% Build: pdflatex resume-software-engineer-ai-products.tex   (needs resume-preamble.tex beside it)
+% =============================================================================
+\documentclass[10pt,a4paper]{article}
+\input{resume-preamble}
+
+\begin{document}
+
+\resumeheader{Software Engineer \textbar{} AI Product Engineering, from Model Integration to Interface}
+
+\section{Summary}
+Software engineer with nearly two years of experience shipping AI product features end to end: the model integration, the async backend around it, and the real-time experience in the browser. Have built across document intelligence, data annotation, voice, and browser automation products.
+
+\section{Experience}
+\org{Predusk Technology Pvt Ltd}{Jaipur, India}
+\role{Associate Software Developer}{Nov 2025 -- Present}
+
+\proj{Labelfort}{Multi-tenant AI data annotation platform}
+\begin{itemize}
+  \item Built the real-time platform behind long-running jobs: a RabbitMQ topic exchange and Web-MQTT gateway delivering progress for 5 event domains with role-based topic filtering, replacing polling and SSE.
+  \item Shipped SAM 2.1 click and box segmentation and multi-object video tracking (YOLO11x with BoT-SORT) into the annotation workspace.
+  \item Built the Synthetic Data Designer from backend workflow to live frontend, and the notification system with role-aware links.
+\end{itemize}
+
+\proj{Digilekh}{Document intelligence and RAG platform}
+\begin{itemize}
+  \item Shipped features across API and frontend: voice input, read-aloud, persistent notifications, note sharing, and a prompt gallery.
+  \item Built the self-hosted speech services behind them (Faster-Whisper, Kokoro) with TTL caching.
+  \item Migrated 3 services to non-blocking I/O, and decoupled and organization-scoped the 9-stage ingestion pipeline (Surya OCR, hybrid search in Qdrant).
+\end{itemize}
+
+\proj{ArchiveLens}{Historical newspaper AI and search}
+\begin{itemize}
+  \item Built the product end to end with FastAPI, Next.js, and PostgreSQL: an 8-stage segmentation, OCR, and classification pipeline that turns scanned Hindi newspapers into searchable articles.
+  \item Delivered search, article, and edition screens that show polygon-clipped print clippings beside the transcribed text, backed by OpenSearch with Hindi and transliteration analyzers.
+\end{itemize}
+
+\proj{Caliber}{Client engagement on Google Cloud and AWS}
+\begin{itemize}
+  \item Lead offshore backend and cloud engineering, from design through release, across both clouds.
+  \item Delivered keyless cross-cloud authentication, idempotent serverless data pipelines, and full-stack features on Next.js, AWS Lambda, and DynamoDB.
+\end{itemize}
+
+\vspace{4pt}
+\role{Data Analyst Trainee (AI \& ML Engineering)}{Jan 2025 -- Oct 2025}
+
+\proj{OceanMind}{Cruise quoting automation across 5 travel-agent portals}
+\begin{itemize}
+  \item Rebuilt browser automation on async Playwright with one isolated context per cabin, run concurrently on shared browsers.
+  \item Shaped the live feedback experience: per-cabin logs over SSE with per-user isolation, example quotes, and missing-information validation before a run starts.
+\end{itemize}
+
+\section{Projects}
+\proj{Flare}{Voice-first 3D AI companion \textbar{} \href{https://flare-ai.pages.dev}{flare-ai.pages.dev}}
+\begin{itemize}
+  \item Designed and built the product solo: a 3D character that listens, thinks, and speaks, chaining Whisper, Llama 3.1, and Kokoro over streaming SSE so playback starts while the model is still writing.
+  \item Built 60 FPS in-browser lip-sync from Web Audio FFT analysis; runs on Next.js and Hono on Cloudflare Workers.
+\end{itemize}
+
+\section{Technical Skills}
+\skill{Languages}{Python, TypeScript, JavaScript, SQL}
+\skill{Backend}{FastAPI, SQLAlchemy (async), Celery, Pydantic, REST APIs, JWT and OAuth2, Hono}
+\skill{AI Integration}{RAG, hybrid search (Qdrant), vLLM, Gemini API, LangGraph, Surya OCR, SAM 2.1, YOLO11x, BoT-SORT, Faster-Whisper, Kokoro}
+\skill{Real-Time and Frontend}{RabbitMQ, MQTT, WebSockets, Server-Sent Events, Next.js, React}
+\skill{Data and Storage}{PostgreSQL, Redis, OpenSearch, Qdrant, BigQuery, DynamoDB, MinIO and S3}
+\skill{Cloud and Tooling}{AWS, Google Cloud, Cloudflare Workers, Terraform, Docker, GitHub Actions, Playwright, Pytest}
+
+\section{Education}
+\org{Bachelor of Computer Applications (BCA)}{2022 -- 2025}
+SSG Pareek College, University of Rajasthan, Jaipur \textbar{} 66.6\%\par
+
+\end{document}

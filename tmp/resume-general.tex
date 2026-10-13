@@ -1,0 +1,81 @@
+% =============================================================================
+% resume-general.tex
+% General-purpose resume. Balanced across backend, real-time messaging, cloud
+% and applied AI; use it when no specific role is being targeted.
+% Build: pdflatex resume-general.tex   (needs resume-preamble.tex beside it)
+% =============================================================================
+\documentclass[10pt,a4paper]{article}
+\input{resume-preamble}
+
+\begin{document}
+
+\resumeheader{Software Engineer \textbar{} Backend Systems, Real-Time Messaging and Applied AI}
+
+\section{Summary}
+Software engineer with nearly two years of experience building production backend and AI systems. Lead offshore backend and cloud engineering for a client engagement on Google Cloud and AWS, and have shipped async Python services, real-time messaging, and vision, speech, and retrieval pipelines across four products.
+
+\section{Experience}
+\org{Predusk Technology Pvt Ltd}{Jaipur, India}
+\role{Associate Software Developer}{Nov 2025 -- Present}
+
+\proj{Caliber}{Client engagement on Google Cloud and AWS}
+\begin{itemize}
+  \item Lead offshore backend and cloud engineering across both clouds, from design through release.
+  \item Implemented keyless cross-cloud authentication with Workload Identity Federation, so AWS workloads read Google Cloud data without static credentials.
+  \item Built idempotent serverless data pipelines with time-budgeted async workers, jittered retries, and guarded MERGE writes, provisioned with Terraform and AWS CDK.
+\end{itemize}
+
+\proj{Labelfort}{Multi-tenant AI data annotation platform}
+\begin{itemize}
+  \item Replaced polling and SSE with a RabbitMQ topic exchange and Web-MQTT gateway, delivering real-time progress for 5 event domains with role-based topic filtering.
+  \item Integrated GPU services for SAM 2.1 segmentation and multi-object video tracking (YOLO11x, BoT-SORT).
+  \item Built the Synthetic Data Designer end to end: draft, preview, execution, records, and CSV export.
+\end{itemize}
+
+\proj{Digilekh}{Document intelligence and RAG platform}
+\begin{itemize}
+  \item Migrated 3 services to non-blocking I/O with SQLAlchemy 2 async, asyncpg, aioboto3, and httpx.
+  \item Decoupled and organization-scoped the 9-stage Celery ingestion pipeline (Surya OCR, page-level chunking, hybrid dense and sparse vectors in Qdrant).
+  \item Built self-hosted speech services (Faster-Whisper, Kokoro) and a tenant-isolated Redis cache layer.
+\end{itemize}
+
+\proj{ArchiveLens}{Historical newspaper AI and search}
+\begin{itemize}
+  \item Built end to end: an 8-stage pipeline with layout segmentation, Surya OCR on vLLM with loop detection, and OpenSearch search with Hindi and transliteration analyzers.
+\end{itemize}
+
+\proj{Sankirtan}{Moderated community event platform}
+\begin{itemize}
+  \item Sole author of the async FastAPI backend: compare-and-swap moderation backed by PostgreSQL CHECK constraints, three-stage image verification, and HMAC-hashed IP rate limiting.
+\end{itemize}
+
+\vspace{4pt}
+\role{Data Analyst Trainee (AI \& ML Engineering)}{Jan 2025 -- Oct 2025}
+
+\proj{OceanMind}{Cruise quoting automation across 5 travel-agent portals}
+\begin{itemize}
+  \item Rebuilt browser automation on async Playwright: one isolated context per cabin on shared Chromium instances.
+  \item Moved database and object storage access to asyncpg and aioboto3 connection pools, and streamed live logs over SSE with per-user isolation and run cancellation.
+  \item Built fare-comparison and pricing logic across supplier portals, with screenshot and video evidence for review.
+\end{itemize}
+
+\section{Projects}
+\proj{Flare}{Voice-first 3D AI companion \textbar{} \href{https://flare-ai.pages.dev}{flare-ai.pages.dev}}
+\begin{itemize}
+  \item Chained Whisper, Llama 3.1, and Kokoro over streaming SSE with sentence-by-sentence speech synthesis.
+  \item Built 60 FPS in-browser lip-sync from Web Audio FFT analysis; runs on Next.js and Hono on Cloudflare Workers.
+\end{itemize}
+
+\section{Technical Skills}
+\skill{Languages}{Python, TypeScript, JavaScript, SQL}
+\skill{Backend}{FastAPI, SQLAlchemy (async), Celery, Pydantic, REST APIs, JWT and OAuth2, Hono}
+\skill{Messaging and Real-Time}{RabbitMQ, MQTT, WebSockets, Server-Sent Events, aio-pika}
+\skill{Data and Storage}{PostgreSQL, Redis, BigQuery, OpenSearch, Qdrant, DynamoDB, MinIO and S3}
+\skill{AI}{RAG, LLM integration (vLLM, Gemini API, LangGraph), Surya OCR, SAM 2.1, YOLO11x, BoT-SORT, Faster-Whisper, Kokoro}
+\skill{Cloud and Tooling}{AWS (Lambda, DynamoDB, S3, CDK), Google Cloud (Cloud Functions, BigQuery), Cloudflare Workers, Terraform, Docker, GitHub Actions, Playwright, Pytest}
+
+\section{Education}
+\org{Bachelor of Computer Applications (BCA)}{2022 -- 2025}
+SSG Pareek College, University of Rajasthan, Jaipur \textbar{} 66.6\%\par
+
+\end{document}
