@@ -4,7 +4,7 @@ import { loadEnv } from 'vite';
 import { resolveMunshiConfig, SITE_URL } from './src/site.config';
 
 // Munshi, the chat assistant, is optional at build time. Its two public settings come from the
-// environment (CI) or a local .env file; without them the page is built with no chat at all.
+// environment (CI); without them the page is built with no chat at all.
 const munshi = resolveMunshiConfig(
   loadEnv(process.env['NODE_ENV'] ?? 'production', process.cwd(), 'PUBLIC_'),
 );

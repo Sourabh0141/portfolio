@@ -16,7 +16,6 @@ node_modules/
 # Environment variables & local secrets
 .env
 .env.*
-!.env.example
 .dev.vars
 
 # Munshi Worker: files generated on every build (knowledge base, runtime types)
