@@ -1,6 +1,16 @@
 import sitemap from '@astrojs/sitemap';
 import { defineConfig, fontProviders } from 'astro/config';
-import { SITE_URL } from './src/site.config';
+import { loadEnv } from 'vite';
+import { resolveMunshiConfig, SITE_URL } from './src/site.config';
+
+// Munshi, the chat assistant, is optional at build time. Its two public settings come from the
+// environment (CI) or a local .env file; without them the page is built with no chat at all.
+const munshi = resolveMunshiConfig(
+  loadEnv(process.env['NODE_ENV'] ?? 'production', process.cwd(), 'PUBLIC_'),
+);
+
+/** Cloudflare Turnstile: its script, and the iframe that script creates. */
+const TURNSTILE_ORIGIN = 'https://challenges.cloudflare.com';
 
 /**
  * Astro Project Configuration
@@ -66,11 +76,17 @@ export default defineConfig({
         "default-src 'self'",
         "img-src 'self' data:",
         "font-src 'self'",
-        "connect-src 'self'",
+        // The chat talks to exactly one other origin: the Munshi Worker.
+        munshi ? (`connect-src 'self' ${munshi.apiUrl}` as const) : "connect-src 'self'",
+        // Turnstile runs its check in an iframe. Without the chat, no frame is allowed at all.
+        ...(munshi ? ([`frame-src ${TURNSTILE_ORIGIN}`] as const) : []),
         "object-src 'none'",
         "base-uri 'self'",
         "form-action 'none'",
       ],
+      // Astro adds a hash for each of the page's own scripts. Turnstile's script is the one
+      // external script, loaded only when a visitor sends their first message.
+      ...(munshi ? { scriptDirective: { resources: ["'self'", TURNSTILE_ORIGIN] } } : {}),
     },
   },
 });

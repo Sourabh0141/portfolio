@@ -1,5 +1,6 @@
-# Pull requests are built and checked only.
-# A push to main, or a manual run from main, also deploys the built site.
+# Pull requests are checked only.
+# A push to main, or a manual run from main, also deploys: infrastructure and the Munshi
+# Worker first, then the site that talks to it.
 name: CI/CD
 
 on:
@@ -9,31 +10,34 @@ on:
   workflow_dispatch:
 
 # One run per branch. A new commit on a pull request cancels the older check.
-# A push to main does not cancel a deploy already in progress: that upload is
+# A push to main does not cancel a deploy already in progress: that deploy is
 # left to finish, and only the latest queued run is kept.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 # The default token can read this repository and nothing else.
-# Deploy adds deployments: write so GitHub can record the production release.
+# The site job adds deployments: write so GitHub can record the production release.
 permissions:
   contents: read
 
 env:
   # Cloudflare Pages project name. Keep in sync with SITE_URL in src/site.config.ts.
   PAGES_PROJECT: sourabh
+  TERRAFORM_VERSION: 1.15.9
+  # Wrangler is run by this workflow, not by a person. It should not report usage.
+  WRANGLER_SEND_METRICS: 'false'
 
 jobs:
-  build:
-    name: Build
+  verify:
+    name: Verify
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          # The build does not read git history.
+          # Nothing here reads git history.
           fetch-depth: 1
 
       - name: Setup Node.js
@@ -52,27 +56,169 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Typecheck
+      - name: Typecheck site
         run: npm run check
 
+      - name: Typecheck Worker
+        run: npm run typecheck:worker
+
+      # Site scripts and the Worker, in Node. Every outside call is stubbed.
+      - name: Unit tests
+        run: npm test
+
+      # The Worker in the real Workers runtime, against a local stand-in for DeepInfra and
+      # Turnstile. Needs no account and no secret, so it also runs on pull requests.
+      - name: Worker runtime check
+        run: npm run test:runtime -w worker
+
+      # Built without chat settings: proves the site still builds when Munshi is switched off.
       - name: Build site
         run: npm run build
 
-      # Each job starts on a clean machine. Save dist only when Deploy will run.
-      - name: Upload build artifact
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v7
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
         with:
-          name: dist
-          path: dist
-          retention-days: 1
-          if-no-files-found: error
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: false
 
-  deploy:
-    name: Deploy
-    # Production is published from main only. Pull requests stop after Build.
+      - name: Check Terraform formatting
+        run: terraform -chdir=terraform fmt -check -recursive
+
+      # No backend, so no credentials: this checks the configuration, not the account.
+      - name: Validate Terraform
+        run: |
+          terraform -chdir=terraform init -backend=false -input=false
+          terraform -chdir=terraform validate
+
+  backend:
+    name: Deploy Munshi
+    # Production is published from main only. Pull requests stop after Verify.
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: build
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production
+    outputs:
+      # Both are public values: they are embedded in the page every visitor downloads.
+      worker_url: ${{ steps.outputs.outputs.worker_url }}
+      turnstile_site_key: ${{ steps.outputs.outputs.turnstile_site_key }}
+    env:
+      # Read by both the Cloudflare Terraform provider and Wrangler.
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      TF_IN_AUTOMATION: 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: false
+
+      # State lives in an R2 bucket created by hand. The S3 backend reads the R2 token from
+      # the AWS_* variables, so no credential is written on a command line or into a file.
+      - name: Terraform init
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          TF_STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
+        run: |
+          if [ -z "$TF_STATE_BUCKET" ]; then
+            echo "::error::Set the TF_STATE_BUCKET repository variable to the name of the R2 state bucket."
+            exit 1
+          fi
+          terraform -chdir=terraform init -input=false \
+            -backend-config="bucket=${TF_STATE_BUCKET}" \
+            -backend-config="endpoints={s3=\"https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com\"}"
+
+      # Apply exactly the plan that was printed, nothing computed after it.
+      - name: Terraform plan and apply
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          terraform -chdir=terraform plan -input=false -lock-timeout=120s -out=munshi.tfplan
+          terraform -chdir=terraform apply -input=false -lock-timeout=120s munshi.tfplan
+
+      - name: Read Terraform outputs
+        id: outputs
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          worker_url="$(terraform -chdir=terraform output -raw worker_url)"
+          # The provider reports the workers.dev address with or without a scheme.
+          case "$worker_url" in
+            http*) ;;
+            *) worker_url="https://${worker_url}" ;;
+          esac
+          echo "worker_url=${worker_url%/}" >> "$GITHUB_OUTPUT"
+          echo "turnstile_site_key=$(terraform -chdir=terraform output -raw turnstile_site_key)" >> "$GITHUB_OUTPUT"
+
+      # Secrets exist only in GitHub. They are uploaded together with the code, as one new
+      # Worker version, so no version can run without them. The DeepInfra key and the session
+      # key come from repository secrets; the Turnstile secret is generated by Cloudflare and
+      # read from Terraform, so no person ever handles it.
+      - name: Deploy Worker
+        working-directory: worker
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          DEEPINFRA_API_KEY: ${{ secrets.DEEPINFRA_API_KEY }}
+          MUNSHI_SESSION_KEY: ${{ secrets.MUNSHI_SESSION_KEY }}
+        run: |
+          set -euo pipefail
+
+          TURNSTILE_SECRET_KEY="$(terraform -chdir=../terraform output -raw turnstile_secret_key)"
+          echo "::add-mask::${TURNSTILE_SECRET_KEY}"
+          export TURNSTILE_SECRET_KEY
+
+          for name in DEEPINFRA_API_KEY MUNSHI_SESSION_KEY TURNSTILE_SECRET_KEY; do
+            if [ -z "${!name}" ]; then
+              echo "::error::${name} is empty. Add it as a repository secret before deploying."
+              exit 1
+            fi
+          done
+
+          # Wrangler reads secrets from a file. It lives in the runner's temp directory,
+          # readable by this user only, and is removed whether or not the deploy succeeds.
+          secrets_file="${RUNNER_TEMP}/munshi-secrets.json"
+          trap 'rm -f "$secrets_file"' EXIT
+          umask 077
+          node -e '
+            const names = ["DEEPINFRA_API_KEY", "MUNSHI_SESSION_KEY", "TURNSTILE_SECRET_KEY"];
+            const secrets = Object.fromEntries(names.map((name) => [name, process.env[name]]));
+            require("node:fs").writeFileSync(process.argv[1], JSON.stringify(secrets));
+          ' "$secrets_file"
+
+          npx wrangler deploy --secrets-file "$secrets_file" --message "Deploy ${GITHUB_SHA}"
+
+      # Fails the run, and so stops the site deploy, if the new version does not answer or
+      # does not enforce its origin rule.
+      - name: Smoke test Worker
+        env:
+          WORKER_URL: ${{ steps.outputs.outputs.worker_url }}
+        run: node worker/scripts/smoke.mjs "$WORKER_URL" "https://${PAGES_PROJECT}.pages.dev"
+
+  site:
+    name: Deploy site
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: backend
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment:
@@ -82,11 +228,32 @@ jobs:
       contents: read
       deployments: write
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v8
+      - name: Checkout
+        uses: actions/checkout@v7
         with:
-          name: dist
-          path: dist
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Built after the Worker is live, with the address and key Terraform reported.
+      - name: Build site
+        env:
+          PUBLIC_MUNSHI_API_URL: ${{ needs.backend.outputs.worker_url }}
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ needs.backend.outputs.turnstile_site_key }}
+        run: |
+          npm run build
+          # A build with a missing or malformed setting silently leaves the chat out.
+          if ! grep -q 'data-munshi-root' dist/index.html; then
+            echo "::error::The built page has no chat. Check the worker_url and turnstile_site_key outputs."
+            exit 1
+          fi
 
       # Credentials come from repository secrets, not from this file.
       - name: Deploy to Cloudflare Pages

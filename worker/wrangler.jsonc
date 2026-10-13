@@ -1,0 +1,106 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  // Terraform creates the Worker with this name. Wrangler uploads versions of it.
+  "name": "munshi",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+
+  // Served from <name>.<account subdomain>.workers.dev. The site has no custom zone.
+  // Keep these two and `observability` equal to terraform/main.tf, or the tools undo each other.
+  "workers_dev": true,
+  "preview_urls": false,
+
+  // Workers Logs is included in the free plan: 200,000 events a day, kept for 3 days.
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true,
+      "head_sampling_rate": 1,
+    },
+  },
+
+  // The compiled knowledge base is generated, not committed. Build it before dev and deploy.
+  "build": {
+    "command": "npm run knowledge",
+  },
+
+  // Rate Limiting bindings are free. Counters are per Cloudflare location and eventually
+  // consistent, so these are abuse ceilings, not exact quotas.
+  "ratelimits": [
+    {
+      // New sessions per client IP. Each one costs a Turnstile verification.
+      "name": "SESSION_LIMITER",
+      "namespace_id": "2001",
+      "simple": { "limit": 5, "period": 60 },
+    },
+    {
+      // Chat messages per client IP.
+      "name": "CHAT_IP_LIMITER",
+      "namespace_id": "2002",
+      "simple": { "limit": 8, "period": 60 },
+    },
+    {
+      // Every chat message shares one key. Caps model spend when abuse comes from many IPs.
+      "name": "CHAT_GLOBAL_LIMITER",
+      "namespace_id": "2003",
+      "simple": { "limit": 40, "period": 60 },
+    },
+  ],
+
+  // Non-secret configuration. The secrets (DEEPINFRA_API_KEY, MUNSHI_SESSION_KEY,
+  // TURNSTILE_SECRET_KEY) are uploaded by CI with `wrangler deploy --secrets-file` and never
+  // live in this file.
+  "vars": {
+    "APP_VERSION": "1.0.0",
+    // Set to "false" and deploy to switch the chat off. The page hides the launcher.
+    "MUNSHI_ENABLED": "true",
+    // Comma separated. Requests from any other Origin are refused.
+    "ALLOWED_ORIGINS": "https://sourabh.pages.dev",
+    "DEEPINFRA_BASE_URL": "https://api.deepinfra.com/v1/openai",
+    // Chosen with `npm run eval`. See worker/eval.
+    "DEEPINFRA_MODEL": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+    "TURNSTILE_VERIFY_URL": "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    // A token solved on any other hostname is refused.
+    "TURNSTILE_HOSTNAME": "sourabh.pages.dev",
+  },
+
+  "env": {
+    // `npm run dev` only. Talks to scripts/stub-upstream.mjs, so no real key is needed on a
+    // laptop. The three values below are throwaway strings, not secrets, and this environment
+    // is never deployed. Bindings and vars are not inherited, so they are repeated here.
+    "local": {
+      "workers_dev": false,
+      "ratelimits": [
+        {
+          "name": "SESSION_LIMITER",
+          "namespace_id": "2101",
+          "simple": { "limit": 5, "period": 60 },
+        },
+        {
+          "name": "CHAT_IP_LIMITER",
+          "namespace_id": "2102",
+          "simple": { "limit": 8, "period": 60 },
+        },
+        {
+          "name": "CHAT_GLOBAL_LIMITER",
+          "namespace_id": "2103",
+          "simple": { "limit": 40, "period": 60 },
+        },
+      ],
+      "vars": {
+        "APP_VERSION": "local",
+        "MUNSHI_ENABLED": "true",
+        "ALLOWED_ORIGINS": "http://localhost:4321",
+        "DEEPINFRA_BASE_URL": "http://127.0.0.1:8788/v1/openai",
+        "DEEPINFRA_MODEL": "stub-model",
+        "TURNSTILE_VERIFY_URL": "http://127.0.0.1:8788/turnstile/v0/siteverify",
+        "TURNSTILE_HOSTNAME": "",
+        "DEEPINFRA_API_KEY": "local-stub-key",
+        "MUNSHI_SESSION_KEY": "local-development-only-signing-key-0000000000",
+        "TURNSTILE_SECRET_KEY": "local-stub-secret",
+      },
+    },
+  },
+}

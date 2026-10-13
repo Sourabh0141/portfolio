@@ -1,9 +1,14 @@
 ---
 // Shared document for every page. The page body is passed in through the default slot.
 import { Font } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Munshi from '../components/chat/Munshi.astro';
 import SeoHead from '../components/SeoHead.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import { profile } from '../data/site';
+import { munshiConfig as munshi } from '../lib/munshi';
+import { SITE_URL } from '../site.config';
 import '../styles/global.css';
 
 export interface Props {
@@ -13,6 +18,17 @@ export interface Props {
 }
 
 const { title, description, noindex = false } = Astro.props;
+
+// `munshi` is null when the build has no chat settings. The page is then exactly as it was.
+const munshiLinks = munshi
+  ? [
+      SITE_URL,
+      new URL(profile.resume.href, SITE_URL).href,
+      ...(await getCollection('projects')).flatMap((project) =>
+        project.data.links.map((link) => link.url),
+      ),
+    ]
+  : [];
 ---
 
 <!doctype html>
@@ -57,6 +73,7 @@ const { title, description, noindex = false } = Astro.props;
       <slot />
     </main>
     <SiteFooter />
+    {munshi && <Munshi config={munshi} links={munshiLinks} />}
     {/* Bundled page behavior. The page stays usable if this script never runs. */}
     <script>
       import '../scripts/main';

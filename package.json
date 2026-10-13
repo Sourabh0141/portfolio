@@ -7,6 +7,9 @@
   "engines": {
     "node": ">=22.12.0"
   },
+  "workspaces": [
+    "worker"
+  ],
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -16,7 +19,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "og": "node scripts/generate-og.mjs",
-    "validate": "npm run format:check && npm run lint && npm run check && npm run build"
+    "validate": "npm run format:check && npm run lint && npm run check && npm run typecheck:worker && npm run test && npm run build",
+    "test": "vitest run && npm run test -w worker",
+    "typecheck:worker": "npm run typecheck -w worker"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -33,6 +38,7 @@
     "prettier": "^3.9.9",
     "prettier-plugin-astro": "^1.1.0",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.71.0"
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.4"
   }
 }

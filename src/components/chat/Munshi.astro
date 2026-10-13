@@ -1,0 +1,390 @@
+---
+// Markup for the chat assistant. It does nothing by itself: main.ts loads the behaviour
+// (src/scripts/munshi) the first time a visitor opens it.
+import { LIMITS } from '../../../shared/munshi';
+import { assistant, profile, socials } from '../../data/site';
+import type { MunshiConfig } from '../../site.config';
+import Icon from '../Icon.astro';
+
+export interface Props {
+  config: MunshiConfig;
+  /** Project and site URLs that an answer may turn into a link. */
+  links: string[];
+}
+
+const { config, links } = Astro.props;
+
+// An address in an answer becomes a link only if it is one of these. See linkify.ts.
+const allowedLinks = [`mailto:${profile.email}`, ...socials.map((social) => social.url), ...links];
+---
+
+<div
+  class="munshi"
+  data-munshi-root
+  data-api-url={config.apiUrl}
+  data-site-key={config.siteKey}
+  data-links={JSON.stringify(allowedLinks)}
+>
+  <button
+    type="button"
+    class="munshi__launcher btn btn--primary"
+    aria-expanded="false"
+    aria-controls="munshi-panel"
+    data-munshi-open
+    data-munshi-launcher
+  >
+    <Icon name="message" size={18} />
+    Ask {assistant.name}
+  </button>
+
+  {/* Not modal: the page behind stays readable and reachable, so there is no focus trap. */}
+  <div
+    id="munshi-panel"
+    class="munshi__panel"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="munshi-title"
+    data-munshi-panel
+    hidden
+  >
+    <header class="munshi__header">
+      <div>
+        <h2 id="munshi-title" class="munshi__title">
+          {assistant.name}
+        </h2>
+        <p class="label">{assistant.tagline}</p>
+      </div>
+      <div class="munshi__actions">
+        <button type="button" class="munshi__icon-btn" data-munshi-reset>
+          <Icon name="refresh" size={18} />
+          <span class="visually-hidden">Start a new chat</span>
+        </button>
+        <button type="button" class="munshi__icon-btn" data-munshi-close>
+          <Icon name="close" size={18} />
+          <span class="visually-hidden">Close chat</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="munshi__log" role="group" aria-label="Conversation" data-munshi-log>
+      <div class="munshi__empty" data-munshi-empty>
+        <p>{assistant.intro}</p>
+        <ul class="munshi__suggestions">
+          {assistant.suggestions.map((suggestion) => (
+            <li>
+              <button type="button" class="munshi__chip" data-munshi-suggestion>
+                {suggestion}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    {/* Turnstile draws here only when it needs the visitor to click. Usually it stays empty. */}
+    <div class="munshi__challenge" data-munshi-challenge></div>
+
+    <form class="munshi__form" data-munshi-form>
+      <label class="visually-hidden" for="munshi-input">
+        Ask a question about {profile.name}
+      </label>
+      <textarea
+        id="munshi-input"
+        class="munshi__input"
+        rows="2"
+        maxlength={LIMITS.userChars}
+        placeholder="Ask about Sourabh’s work…"
+        enterkeyhint="send"
+        autocomplete="off"
+        data-munshi-input
+      ></textarea>
+      <button type="submit" class="munshi__send" data-munshi-send disabled>
+        <Icon name="send" size={18} />
+        <span class="visually-hidden">Send</span>
+      </button>
+      <button type="button" class="munshi__send" data-munshi-stop hidden>
+        <Icon name="stop" size={18} />
+        <span class="visually-hidden">Stop answering</span>
+      </button>
+    </form>
+
+    <p class="munshi__notice">
+      {assistant.notice}
+      <span class="munshi__counter" aria-hidden="true" data-munshi-counter>
+        0/{LIMITS.userChars}
+      </span>
+    </p>
+
+    {/* Announces a finished answer once. The log is not live, or each streamed word would be read. */}
+    <p class="visually-hidden" role="status" aria-live="polite" data-munshi-status></p>
+  </div>
+</div>
+
+{/* Global, not scoped: the messages are created by script and carry no Astro scope attribute. */}
+<style is:global>
+  .munshi {
+    --munshi-gap: clamp(0.75rem, 3vw, 1.5rem);
+  }
+
+  /* The chat needs JavaScript. Without it there is nothing to launch, here or in the hero. */
+  html:not(.js) .munshi,
+  html:not(.js) [data-munshi-open] {
+    display: none;
+  }
+
+  .munshi__launcher {
+    position: fixed;
+    right: var(--munshi-gap);
+    bottom: var(--munshi-gap);
+    z-index: 60;
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.35);
+  }
+
+  .munshi__panel {
+    position: fixed;
+    right: var(--munshi-gap);
+    /* Sits above the launcher, which stays visible as the toggle. */
+    bottom: calc(var(--munshi-gap) + 3.75rem);
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    width: min(26rem, 100vw - 2 * var(--munshi-gap));
+    height: min(38rem, 100dvh - var(--header-h) - 6.5rem);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+    box-shadow: 0 16px 48px rgb(0 0 0 / 0.45);
+  }
+
+  /* These set a display value, which would otherwise override the hidden attribute. */
+  .munshi [hidden] {
+    display: none;
+  }
+
+  .munshi__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 0.75rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .munshi__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  .munshi__actions {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .munshi__icon-btn,
+  .munshi__send {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: transparent;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .munshi__icon-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent-text);
+  }
+
+  .munshi__log {
+    flex: 1;
+    min-height: 0;
+    padding: 1rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .munshi__empty {
+    display: grid;
+    gap: 1rem;
+    color: var(--text-muted);
+  }
+
+  .munshi__suggestions {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .munshi__chip {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-sunken);
+    color: var(--text);
+    font-size: 0.9rem;
+    line-height: 1.35;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .munshi__chip:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent-text);
+  }
+
+  .munshi__chip:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+
+  .munshi__msg {
+    margin-bottom: 1rem;
+  }
+
+  .munshi__who {
+    margin-bottom: 0.25rem;
+  }
+
+  .munshi__msg--assistant .munshi__who {
+    color: var(--accent-text);
+  }
+
+  .munshi__text {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    /* Answers are plain text. Their line breaks and "-" lists are kept as written. */
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .munshi__msg--user .munshi__text {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-sunken);
+  }
+
+  .munshi__text--pending::after {
+    content: 'Thinking…';
+    color: var(--text-muted);
+  }
+
+  .munshi__msg--error {
+    display: grid;
+    justify-items: start;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+  }
+
+  .munshi__challenge:not(:empty) {
+    padding: 0.5rem 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .munshi__form {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .munshi__input {
+    flex: 1;
+    min-width: 0;
+    max-height: 8rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--text);
+    /* 16px keeps iOS Safari from zooming the page when the field takes focus. */
+    font: inherit;
+    font-size: 1rem;
+    line-height: 1.4;
+    resize: none;
+    /* Grows with its content where the browser supports it; two rows elsewhere. */
+    field-sizing: content;
+  }
+
+  .munshi__input::placeholder {
+    color: var(--text-faint);
+  }
+
+  .munshi__send {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .munshi__send:hover:not(:disabled) {
+    border-color: var(--accent-hover);
+    background: var(--accent-hover);
+  }
+
+  .munshi__send:disabled {
+    border-color: var(--line);
+    background: transparent;
+    color: var(--text-faint);
+    cursor: default;
+  }
+
+  .munshi__notice {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+    padding: 0 0.75rem 0.75rem;
+    color: var(--text-faint);
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .munshi__counter {
+    flex: none;
+    font-family: var(--font-code);
+  }
+
+  /* Phones: the panel is the whole screen, and the page behind it does not scroll. */
+  @media (max-width: 39.99rem) {
+    .munshi__panel {
+      inset: 0;
+      width: auto;
+      height: auto;
+      border: 0;
+      border-radius: 0;
+    }
+
+    html.munshi-open {
+      overflow: hidden;
+    }
+
+    html.munshi-open .munshi__launcher {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .munshi__text--pending::after {
+      animation: munshi-pulse 1.2s ease-in-out infinite;
+    }
+  }
+
+  @keyframes munshi-pulse {
+    50% {
+      opacity: 0.4;
+    }
+  }
+</style>

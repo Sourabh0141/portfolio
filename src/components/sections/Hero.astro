@@ -1,6 +1,9 @@
 ---
-import { profile, socials } from '../../data/site';
+import { assistant, profile, socials } from '../../data/site';
+import { munshiConfig } from '../../lib/munshi';
 import Icon from '../Icon.astro';
+
+const hasMunshi = munshiConfig !== null;
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -29,6 +32,13 @@ import Icon from '../Icon.astro';
         Download resume
         <Icon name="download" size={18} />
       </a>
+      {/* Opens the panel rendered by BaseLayout. Hidden without JavaScript, like the launcher. */}
+      {hasMunshi && (
+        <button type="button" class="btn" aria-controls="munshi-panel" data-munshi-open>
+          Ask {assistant.name}
+          <Icon name="message" size={18} />
+        </button>
+      )}
     </div>
 
     <ul class="hero__links">

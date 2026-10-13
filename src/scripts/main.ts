@@ -1,4 +1,6 @@
 // Optional behavior for the portfolio. The page stays usable if this script never runs.
+import type { Munshi } from './munshi/ui';
+
 const root = document.documentElement;
 
 // The inline script in BaseLayout sets data-theme before first paint.
@@ -139,8 +141,43 @@ function initReveal(): void {
   for (const item of items) observer.observe(item);
 }
 
+// The chat is its own chunk, fetched on the first click. Until then the only cost of Munshi
+// on a page view is this listener.
+function initMunshi(): void {
+  const root = document.querySelector<HTMLElement>('[data-munshi-root]');
+  if (!root) return;
+
+  let loading: Promise<Munshi> | undefined;
+  const load = (): Promise<Munshi> => {
+    loading ??= import('./munshi/ui')
+      .then(({ createMunshi }) => createMunshi(root))
+      .catch((error: unknown) => {
+        // A failed download can be retried on the next click.
+        loading = undefined;
+        throw error;
+      });
+    return loading;
+  };
+
+  for (const trigger of document.querySelectorAll<HTMLElement>('[data-munshi-open]')) {
+    trigger.addEventListener('click', () => {
+      void load().then(
+        (munshi) => {
+          // The launcher is a toggle. Any other trigger only ever opens.
+          if (trigger.hasAttribute('data-munshi-launcher') && munshi.isOpen()) munshi.close();
+          else munshi.open(trigger);
+        },
+        () => {
+          // Offline or blocked. The page stays as it was; the visitor can click again.
+        },
+      );
+    });
+  }
+}
+
 initTheme();
 initNav();
 initScrollSpy();
 initCopy();
 initReveal();
+initMunshi();

@@ -1,0 +1,24 @@
+{
+  "name": "munshi",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Munshi: the Cloudflare Worker behind the portfolio chatbot. Proxies visitor questions to DeepInfra.",
+  "main": "src/index.ts",
+  "scripts": {
+    "knowledge": "tsx scripts/build-knowledge.ts",
+    "types": "wrangler types",
+    "dev": "wrangler dev --env local",
+    "dev:upstream": "node scripts/stub-upstream.mjs",
+    "typecheck": "npm run knowledge && wrangler types && tsc --noEmit",
+    "test": "npm run knowledge && vitest run",
+    "eval": "npm run knowledge && tsx eval/run.ts",
+    "deploy": "wrangler deploy",
+    "test:runtime": "npm run knowledge && node scripts/runtime-check.mjs"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15",
+    "wrangler": "^4.149.0",
+    "yaml": "^2.9.1"
+  }
+}

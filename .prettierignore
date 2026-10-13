@@ -11,3 +11,10 @@ package-lock.json
 
 # Static assets, media files, and Cloudflare configuration files (e.g. _headers)
 public/
+
+# Generated on every build of the Munshi Worker (knowledge base, runtime types)
+worker/src/generated/
+worker/worker-configuration.d.ts
+
+# Terraform is formatted by `terraform fmt`; its provider cache is not source
+.terraform/

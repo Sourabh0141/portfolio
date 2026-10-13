@@ -43,6 +43,22 @@ export const nav = [
   { href: '#contact', label: 'Contact' },
 ] as const;
 
+/** Munshi, the chat assistant. Its knowledge is compiled from this file and `src/content`. */
+export const assistant = {
+  name: 'Munshi',
+  tagline: 'Ask me about Sourabh’s work',
+  intro:
+    'I’m Munshi, the record keeper for this portfolio. Ask me about Sourabh’s projects, skills and experience, or how to reach him.',
+  suggestions: [
+    'What does Sourabh work on day to day?',
+    'Which project shows his backend work best?',
+    'What has he built with AI models?',
+    'How can I get in touch with him?',
+  ],
+  notice:
+    'Munshi is an AI and can be wrong. Questions are logged for up to 3 days to improve answers, so please don’t share personal details.',
+} as const;
+
 export const focusAreas = [
   'High-throughput async Python & FastAPI microservices',
   'Event-driven architectures with RabbitMQ and MQTT',

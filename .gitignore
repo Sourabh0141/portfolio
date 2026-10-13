@@ -16,7 +16,20 @@ node_modules/
 # Environment variables & local secrets
 .env
 .env.*
+!.env.example
 .dev.vars
+
+# Munshi Worker: files generated on every build (knowledge base, runtime types)
+worker/src/generated/
+worker/worker-configuration.d.ts
+
+# Terraform: provider cache, state and plans. The lock file is committed.
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+crash.log
 
 # TypeScript cache
 *.tsbuildinfo

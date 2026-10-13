@@ -6,7 +6,8 @@
   "include": [".astro/types.d.ts", "**/*"],
 
   // Exclude compiled production artifacts and external package dependencies from type-checking.
-  "exclude": ["dist", "node_modules"],
+  // The Worker has its own tsconfig: it targets the Workers runtime, not the browser.
+  "exclude": ["dist", "node_modules", "worker"],
 
   "compilerOptions": {
     // Provide global type definitions for Node.js runtime APIs used in build/utility scripts.

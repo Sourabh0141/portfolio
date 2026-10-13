@@ -1,0 +1,50 @@
+# Asks candidate models the questions in worker/eval/cases.json, with the production prompt,
+# and reports which are accurate and safe enough to answer visitors. Costs a few cents.
+#
+# Run it before changing DEEPINFRA_MODEL in worker/wrangler.jsonc, and after any change to the
+# prompt or to worker/knowledge/facts.md. The result is on the run's summary page.
+name: Munshi evaluation
+
+on:
+  workflow_dispatch:
+    inputs:
+      models:
+        description: Comma-separated DeepInfra model IDs. Leave empty for the default candidates.
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  evaluate:
+    name: Evaluate models
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The input goes through the environment so its text is never run as shell.
+      # The job fails if no candidate passes.
+      - name: Run evaluation
+        env:
+          DEEPINFRA_API_KEY: ${{ secrets.DEEPINFRA_API_KEY }}
+          MODELS: ${{ inputs.models }}
+        run: |
+          if [ -n "$MODELS" ]; then
+            npm run eval -w worker -- --models "$MODELS"
+          else
+            npm run eval -w worker
+          fi

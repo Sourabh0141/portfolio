@@ -19,6 +19,13 @@ A production-grade, statically generated developer portfolio engineered with Ast
   - [Projects Collection](#projects-collection)
   - [Experience Collection](#experience-collection)
   - [Resume Management](#resume-management)
+- [Munshi: the Chat Assistant](#munshi-the-chat-assistant)
+  - [How a Question Is Answered](#how-a-question-is-answered)
+  - [What Munshi Knows](#what-munshi-knows)
+  - [Abuse and Cost Controls](#abuse-and-cost-controls)
+  - [Running Munshi Locally](#running-munshi-locally)
+  - [Choosing the Model](#choosing-the-model)
+  - [Operating Munshi](#operating-munshi)
 - [Security and HTTP Response Headers](#security-and-http-response-headers)
 - [Automated Open Graph and Asset Generation](#automated-open-graph-and-asset-generation)
 - [Continuous Integration and Deployment](#continuous-integration-and-deployment)
@@ -108,21 +115,27 @@ This repository houses the complete source code, configuration, and content for 
 
 ## Technology Stack
 
-| Layer                 | Tool / Dependency        | Version   | Purpose                                                        |
-| :-------------------- | :----------------------- | :-------- | :------------------------------------------------------------- |
-| **Framework**         | `astro`                  | `^7.3.5`  | Core static site generation framework and component compiler   |
-| **Sitemap**           | `@astrojs/sitemap`       | `^3.7.4`  | Automated XML sitemap generation during build                  |
-| **Type Checking**     | `typescript`             | `~6.0.3`  | Static type analysis with Astro strictest preset               |
-| **Astro Diagnostics** | `@astrojs/check`         | `^0.9.10` | Static verification of `.astro` templates and content schemas  |
-| **Code Quality**      | `eslint`                 | `^9.39.5` | Flat configuration linting engine                              |
-| **Astro Linting**     | `eslint-plugin-astro`    | `^1.7.0`  | Template linting and accessibility rules                       |
-| **Accessibility**     | `eslint-plugin-jsx-a11y` | `^6.10.2` | WCAG rule validation for JSX/Astro ASTs                        |
-| **Code Formatting**   | `prettier`               | `^3.9.9`  | Automated code style enforcement                               |
-| **Formatting Plugin** | `prettier-plugin-astro`  | `^1.1.0`  | Prettier integration for `.astro` markup                       |
-| **Typography**        | `@fontsource-variable/*` | `^5.3.0`  | Self-hosted variable fonts (`Space Grotesk`, `JetBrains Mono`) |
-| **Automation**        | `playwright`             | `^1.63.0` | Headless browser for deterministic Open Graph image creation   |
-| **CI/CD Platform**    | GitHub Actions           | --        | Validation pipeline and automated deployments                  |
-| **Hosting Platform**  | Cloudflare Pages         | --        | Global distributed static edge hosting                         |
+| Layer                 | Tool / Dependency        | Version    | Purpose                                                         |
+| :-------------------- | :----------------------- | :--------- | :-------------------------------------------------------------- |
+| **Framework**         | `astro`                  | `^7.3.5`   | Core static site generation framework and component compiler    |
+| **Sitemap**           | `@astrojs/sitemap`       | `^3.7.4`   | Automated XML sitemap generation during build                   |
+| **Type Checking**     | `typescript`             | `~6.0.3`   | Static type analysis with Astro strictest preset                |
+| **Astro Diagnostics** | `@astrojs/check`         | `^0.9.10`  | Static verification of `.astro` templates and content schemas   |
+| **Code Quality**      | `eslint`                 | `^9.39.5`  | Flat configuration linting engine                               |
+| **Astro Linting**     | `eslint-plugin-astro`    | `^1.7.0`   | Template linting and accessibility rules                        |
+| **Accessibility**     | `eslint-plugin-jsx-a11y` | `^6.10.2`  | WCAG rule validation for JSX/Astro ASTs                         |
+| **Code Formatting**   | `prettier`               | `^3.9.9`   | Automated code style enforcement                                |
+| **Formatting Plugin** | `prettier-plugin-astro`  | `^1.1.0`   | Prettier integration for `.astro` markup                        |
+| **Typography**        | `@fontsource-variable/*` | `^5.3.0`   | Self-hosted variable fonts (`Space Grotesk`, `JetBrains Mono`)  |
+| **Automation**        | `playwright`             | `^1.63.0`  | Headless browser for deterministic Open Graph image creation    |
+| **Unit Tests**        | `vitest`                 | `^5.0.4`   | Tests for the page scripts and the Munshi Worker                |
+| **Chat API**          | Cloudflare Workers       | --         | Munshi Worker: validates, rate limits and proxies chat requests |
+| **Worker Tooling**    | `wrangler`               | `^4.149.0` | Builds, runs locally and deploys the Worker                     |
+| **Language Model**    | DeepInfra                | --         | Hosts the open-weights model that writes Munshi's answers       |
+| **Bot Protection**    | Cloudflare Turnstile     | --         | One check per visitor before the first chat message             |
+| **Infrastructure**    | Terraform                | `>= 1.11`  | Provisions the Worker and the Turnstile widget                  |
+| **CI/CD Platform**    | GitHub Actions           | --         | Validation pipeline and automated deployments                   |
+| **Hosting Platform**  | Cloudflare Pages         | --         | Global distributed static edge hosting                          |
 
 ---
 
@@ -132,8 +145,11 @@ This repository houses the complete source code, configuration, and content for 
 portfolio/
 ├── .github/
 │   └── workflows/
-│       └── ci-cd.yml           # Automated CI validation and Cloudflare Pages CD
+│       ├── ci-cd.yml           # CI validation, then Terraform, Worker and Pages deployment
+│       ├── munshi-eval.yml     # Manual: compare candidate models on the evaluation set
+│       └── munshi-rollback.yml # Manual: restore an earlier Worker version
 ├── .editorconfig               # Universal editor formatting consistency rules
+├── .env.example                # Public build settings for the chat (no secrets)
 ├── .nvmrc                      # Node.js active runtime version declaration (22)
 ├── .prettierignore             # Paths excluded from Prettier format enforcement
 ├── .prettierrc.json5           # Prettier configuration file
@@ -150,11 +166,15 @@ portfolio/
 │   ├── favicon.svg             # SVG favicon mark
 │   ├── og.png                  # Pre-rendered 1200x630 Open Graph preview card
 │   └── resume/                 # Downloadable PDF curriculum vitae
+├── shared/
+│   └── munshi.ts               # API contract shared by the page and the Worker
 ├── scripts/
 │   ├── generate-og.mjs         # Playwright script rendering OG and touch icons
 │   └── og-template.html        # HTML/CSS layout template used for screenshotting
 ├── src/
 │   ├── components/             # Reusable Astro presentation components
+│   │   ├── chat/
+│   │   │   └── Munshi.astro    # Chat launcher and panel markup and styles
 │   │   ├── sections/           # Modular landing page sections
 │   │   │   ├── About.astro     # Bio narrative, focus areas, and formal education
 │   │   │   ├── Contact.astro   # Email, phone, copy actions, and contact links
@@ -184,11 +204,21 @@ portfolio/
 │   │   ├── index.astro         # Single-page portfolio root entry point
 │   │   └── robots.txt.ts       # Endpoint dynamically generating compliant robots.txt
 │   ├── scripts/
-│   │   └── main.ts             # Bundled progressive client behavior
+│   │   ├── main.ts             # Bundled progressive client behavior
+│   │   └── munshi/             # Chat behavior, loaded on first use (stream parser, store, UI)
 │   ├── site.config.ts          # Base URL and deployment environment constants
 │   └── styles/
 │       └── global.css          # Design system, CSS variables, tokens, and utilities
-└── tsconfig.json               # TypeScript compiler options extending astro/tsconfigs/strictest
+├── terraform/                  # Cloudflare Worker and Turnstile widget; state in R2
+├── tsconfig.json               # TypeScript compiler options extending astro/tsconfigs/strictest
+├── vitest.config.ts            # Unit test configuration for the page scripts
+└── worker/                     # Munshi Worker (npm workspace)
+    ├── eval/                   # Model evaluation cases, scorer and runner
+    ├── knowledge/facts.md      # Hand-written facts added to the knowledge base
+    ├── scripts/                # Knowledge builder, local stub upstream, runtime and smoke checks
+    ├── src/                    # Worker source
+    ├── test/                   # Worker unit tests
+    └── wrangler.jsonc          # Worker configuration, bindings and non-secret variables
 ```
 
 ---
@@ -263,17 +293,30 @@ npm run validate
 
 The `package.json` file contains scripts for the development and release lifecycle:
 
-| Command                | Action                                                                                    |
-| :--------------------- | :---------------------------------------------------------------------------------------- |
-| `npm run dev`          | Boots local Astro development server at `http://localhost:4321`                           |
-| `npm run build`        | Compiles static production build into `dist/`                                             |
-| `npm run preview`      | Runs local HTTP server to preview static build in `dist/`                                 |
-| `npm run check`        | Executes `@astrojs/check` across `.astro` templates and content collections               |
-| `npm run lint`         | Runs ESLint 9 across all codebase files                                                   |
-| `npm run format`       | Auto-formats all supported files using Prettier                                           |
-| `npm run format:check` | Verifies code conforms to Prettier rules without making edits                             |
-| `npm run og`           | Executes Playwright script to re-render `public/og.png` and `public/apple-touch-icon.png` |
-| `npm run validate`     | Runs formatting check, linting, typecheck, and production build sequentially              |
+| Command                    | Action                                                                                    |
+| :------------------------- | :---------------------------------------------------------------------------------------- |
+| `npm run dev`              | Boots local Astro development server at `http://localhost:4321`                           |
+| `npm run build`            | Compiles static production build into `dist/`                                             |
+| `npm run preview`          | Runs local HTTP server to preview static build in `dist/`                                 |
+| `npm run check`            | Executes `@astrojs/check` across `.astro` templates and content collections               |
+| `npm run lint`             | Runs ESLint 9 across all codebase files                                                   |
+| `npm run format`           | Auto-formats all supported files using Prettier                                           |
+| `npm run format:check`     | Verifies code conforms to Prettier rules without making edits                             |
+| `npm run og`               | Executes Playwright script to re-render `public/og.png` and `public/apple-touch-icon.png` |
+| `npm test`                 | Runs the unit tests for the page scripts and the Munshi Worker                            |
+| `npm run typecheck:worker` | Builds the knowledge base, generates runtime types and typechecks the Worker              |
+| `npm run validate`         | Runs formatting check, linting, both typechecks, unit tests, and the production build     |
+
+Worker scripts are run through the workspace, for example `npm run dev -w worker`:
+
+| Command        | Action                                                                                  |
+| :------------- | :-------------------------------------------------------------------------------------- |
+| `dev`          | Runs the Worker locally on `http://localhost:8787` against the stub upstream            |
+| `dev:upstream` | Starts the local stand-in for DeepInfra and Turnstile verification                      |
+| `knowledge`    | Compiles the knowledge base from the portfolio content                                  |
+| `test`         | Runs the Worker unit tests                                                              |
+| `test:runtime` | Runs the Worker in the real Workers runtime locally and checks it end to end            |
+| `eval`         | Compares models on the evaluation set. Calls DeepInfra; run it from the GitHub workflow |
 
 ---
 
@@ -353,13 +396,102 @@ To update the resume, replace the file at this path while preserving the filenam
 
 ---
 
+## Munshi: the Chat Assistant
+
+Munshi is the assistant that visitors open from the button at the bottom-right of the page or from the hero. It answers questions about Sourabh's work from a fixed record compiled from this repository. A munshi is a trusted record keeper.
+
+### How a Question Is Answered
+
+```
+Browser                          Munshi Worker (workers.dev)                DeepInfra
+   |  1. Turnstile token  ------>  POST /v1/session                            |
+   |  <------ signed session token (30 minutes)                                |
+   |  2. token + history  ------>  POST /v1/chat                               |
+   |                               origin, rate limits, token, validation      |
+   |                               system prompt + knowledge + history ------> |
+   |  <----------- answer streamed straight through, untouched  <------------- |
+```
+
+- **The key stays on the server.** The DeepInfra API key exists only as a GitHub secret and a Worker secret. The page never sees it.
+- **The Worker does not read the stream.** It hands the model's response body to the browser as it is, and the browser parses the server-sent events. This keeps each request far inside the free plan's 10 ms of CPU time.
+- **The Worker is stateless.** The conversation is kept in the browser's `sessionStorage` and sent back, trimmed, with each question. Nothing is stored on the server.
+- **The chat loads on demand.** Its script is fetched on the first click and Turnstile on the first message, so a page view that never uses Munshi contacts no third party.
+
+### What Munshi Knows
+
+Munshi does not use retrieval. Everything it knows fits in one prompt, so `worker/scripts/build-knowledge.ts` compiles a single text record on every build from:
+
+- `src/data/site.ts` (profile, links, about, skills, education)
+- `src/content/projects/*.yaml` and `src/content/experience/*.yaml`
+- `worker/knowledge/facts.md` (hand-written facts, and the topics Munshi must refer to email)
+
+Editing the portfolio content therefore updates Munshi on the next deploy. The build fails if the record exceeds 28,000 characters, contains an unfinished note, or contains the phone number, which Munshi does not give out.
+
+To teach Munshi something new, add it to `worker/knowledge/facts.md`. Only write what is true and what you are content to have repeated to any visitor.
+
+### Abuse and Cost Controls
+
+| Control           | Where                   | Effect                                                                                           |
+| :---------------- | :---------------------- | :----------------------------------------------------------------------------------------------- |
+| Origin allowlist  | Worker                  | Requests from any site other than the portfolio are refused before any work is done              |
+| Turnstile session | Worker and page         | One bot check buys a signed token valid for 30 minutes                                           |
+| Rate limits       | `worker/wrangler.jsonc` | 5 sessions and 8 messages a minute per IP, 40 messages a minute overall, per Cloudflare location |
+| Input limits      | `shared/munshi.ts`      | 600 characters a message, 12 messages a request, 16 KB a body                                    |
+| Output limit      | Worker                  | 350 tokens an answer                                                                             |
+| Spending limit    | DeepInfra account       | The hard ceiling on cost. Set it in the DeepInfra dashboard                                      |
+| Kill switch       | `MUNSHI_ENABLED`        | Set to `"false"` in `worker/wrangler.jsonc` and deploy to switch the chat off                    |
+
+Each request writes one log line to Workers Logs (kept for 3 days on the free plan) with its outcome, timings and the visitor's question. Email addresses and long numbers are removed from the question first. IP addresses and answers are not logged.
+
+### Running Munshi Locally
+
+No secret is needed on a development machine. A local stand-in replaces DeepInfra and Turnstile verification:
+
+```bash
+cp .env.example .env              # public build settings for the page
+npm run dev:upstream -w worker    # terminal 1: stub for DeepInfra and Turnstile
+npm run dev -w worker             # terminal 2: the Worker, http://localhost:8787
+npm run dev                       # terminal 3: the site, http://localhost:4321
+```
+
+The stub returns a canned answer, so this exercises the whole path except the real model. `npm run test:runtime -w worker` runs the Worker half of that setup as an automated check.
+
+### Choosing the Model
+
+The model is the `DEEPINFRA_MODEL` variable in `worker/wrangler.jsonc`. Before changing it, or after changing the prompt or `facts.md`, run the **Munshi evaluation** workflow from the Actions tab. It asks each candidate the questions in `worker/eval/cases.json` and scores the answers without a judge model: required facts, banned content and length.
+
+A model passes when it answers at least 90% of the factual questions correctly and passes every case in the other four groups: questions it must decline, prompt injection, off-topic requests and confidentiality. Use the cheapest model that passes.
+
+### Operating Munshi
+
+**One-time setup**
+
+1. Create an R2 bucket for Terraform state and an R2 API token limited to that bucket.
+2. Give the Cloudflare API token used by CI these permissions: Workers Scripts (edit), Turnstile (edit), Cloudflare Pages (edit).
+3. Create a DeepInfra API key for Munshi and set an account spending limit.
+4. Add the repository secrets and variable listed under [Continuous Integration and Deployment](#continuous-integration-and-deployment).
+5. Run the **Munshi evaluation** workflow and set `DEEPINFRA_MODEL` to the model it recommends.
+
+**Rolling back**
+
+| Problem                | Action                                                                                             |
+| :--------------------- | :------------------------------------------------------------------------------------------------- |
+| A bad Worker version   | Run the **Munshi rollback** workflow, then revert the commit so the next push does not redeploy it |
+| Wrong answers or abuse | Set `MUNSHI_ENABLED` to `"false"` and deploy, or lower the DeepInfra spending limit                |
+| A bad site change      | Revert the commit, or roll back the deployment in the Cloudflare Pages dashboard                   |
+| A leaked key           | Rotate it at the provider, update the GitHub secret and rerun the workflow                         |
+
+Terraform creates the Worker and its settings; Wrangler uploads the code, bindings and secrets. The observability and workers.dev settings appear in both `terraform/main.tf` and `worker/wrangler.jsonc` and must be kept equal.
+
+---
+
 ## Security and HTTP Response Headers
 
 This application implements a defense-in-depth security model configured across build and edge layers.
 
 ### 1. Content Security Policy (CSP)
 
-Astro computes cryptographic SHA-256 hashes for all authorized inline scripts (such as the early anti-FOUC theme script). Configured in `astro.config.ts`:
+Astro computes cryptographic SHA-256 hashes for all authorized inline scripts (such as the early anti-FOUC theme script). The base policy, configured in `astro.config.ts`:
 
 ```typescript
 security: {
@@ -377,6 +509,13 @@ security: {
   },
 }
 ```
+
+When the build has the chat settings, exactly three sources are added and nothing else is loosened:
+
+- `connect-src` gains the Munshi Worker's origin.
+- `script-src` and `frame-src` gain `https://challenges.cloudflare.com` for Turnstile.
+
+Without the settings the page is built with no chat and the base policy unchanged. Answers from the model are inserted as text, never as HTML, and an address in an answer becomes a link only if it is one of the portfolio's own.
 
 ### 2. Edge Response Headers
 
@@ -428,24 +567,33 @@ The deployment pipeline is orchestrated using GitHub Actions in `.github/workflo
 
 ### Workflow Architecture
 
-- **Pull Requests**:
-  - Checks out code with `fetch-depth: 1`.
-  - Sets up Node.js from `.nvmrc` with npm caching.
-  - Runs `npm ci`.
-  - Executes `format:check`, `lint`, `check`, and `build`.
-  - Concurrency group cancels redundant in-progress runs when new commits are pushed to the PR.
-- **Pushes to `main`**:
-  - Executes the identical validation test suite.
-  - Uploads compiled `dist/` as an action artifact.
-  - Deploys `dist/` to Cloudflare Pages using `cloudflare/wrangler-action`.
-  - Deployment concurrency allows in-progress releases to finish safely while collapsing intermediate queued runs.
+| Job               | Runs on                  | What it does                                                                                                              |
+| :---------------- | :----------------------- | :------------------------------------------------------------------------------------------------------------------------ |
+| **Verify**        | Pull requests and `main` | Formatting, lint, both typechecks, unit tests, the Worker runtime check, a site build, and `terraform fmt` and `validate` |
+| **Deploy Munshi** | `main` only              | `terraform plan` and `apply`, then `wrangler deploy` with the secrets, then a smoke test of the live Worker               |
+| **Deploy site**   | `main` only              | Builds the site with the Worker URL and Turnstile site key from Terraform, then deploys `dist/` to Cloudflare Pages       |
 
-### Required Repository Secrets
+- The Worker is deployed and smoke-tested before the site is built, so the page never points at a Worker that is down.
+- A new commit on a pull request cancels the older check. A deploy in progress on `main` is left to finish.
+- Verify needs no secret, so it runs in full on pull requests.
 
-The deploy job requires the following secrets configured in GitHub repository settings:
+Two manual workflows sit beside it: **Munshi evaluation** and **Munshi rollback**.
 
-- `CLOUDFLARE_API_TOKEN`: Cloudflare API Token with Pages deployment permissions.
-- `CLOUDFLARE_ACCOUNT_ID`: Target Cloudflare account identifier.
+### Required Repository Secrets and Variables
+
+All of these are set in the GitHub repository settings. None is stored in the repository, on a developer machine, or entered by hand in the Cloudflare dashboard.
+
+| Name                    | Kind     | Purpose                                                               |
+| :---------------------- | :------- | :-------------------------------------------------------------------- |
+| `CLOUDFLARE_API_TOKEN`  | Secret   | Cloudflare API token for Terraform, Wrangler and the Pages deploy     |
+| `CLOUDFLARE_ACCOUNT_ID` | Secret   | Target Cloudflare account identifier                                  |
+| `R2_ACCESS_KEY_ID`      | Secret   | R2 token for the Terraform state bucket                               |
+| `R2_SECRET_ACCESS_KEY`  | Secret   | R2 token secret for the Terraform state bucket                        |
+| `DEEPINFRA_API_KEY`     | Secret   | Key the Worker uses to call the model                                 |
+| `MUNSHI_SESSION_KEY`    | Secret   | Random string of 32 or more characters that signs chat session tokens |
+| `TF_STATE_BUCKET`       | Variable | Name of the R2 bucket that holds Terraform state                      |
+
+CI uploads the DeepInfra key and the session key to the Worker together with its code, so they never enter Terraform state. The Turnstile secret is generated by Cloudflare when Terraform creates the widget; CI reads it from Terraform and passes it to the Worker, so it is recorded in the state file in the private R2 bucket and nowhere else.
 
 ---
 
@@ -464,7 +612,9 @@ The codebase adheres to the following quality enforcement gates:
    - Explicit type imports enforced by `@typescript-eslint/consistent-type-imports`.
    - Zero tolerance for `any` types or implicit coercion.
 3. **Automated Verification**:
-   - Merges to `main` must pass all four stages of `npm run validate`.
+   - Merges to `main` must pass every stage of `npm run validate`.
+   - Unit tests cover the Worker's validation, session tokens, CORS, logging and failure paths, and the page's stream parser, history store and link handling.
+   - `npm run test:runtime -w worker` runs the Worker in the real Workers runtime against a local stand-in, with no account or network.
 
 ---
 

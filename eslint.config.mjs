@@ -8,7 +8,16 @@ import tseslint from 'typescript-eslint';
  */
 export default defineConfig([
   // Ignore build outputs, auto-generated caches, packages, and static assets.
-  globalIgnores(['dist/', '.astro/', 'node_modules/', 'public/']),
+  globalIgnores([
+    'dist/',
+    '.astro/',
+    'node_modules/',
+    'public/',
+    '**/.wrangler/',
+    '**/.terraform/',
+    'worker/src/generated/',
+    'worker/worker-configuration.d.ts',
+  ]),
 
   // Core TypeScript recommended rules for type safety and best practices.
   tseslint.configs.recommended,
