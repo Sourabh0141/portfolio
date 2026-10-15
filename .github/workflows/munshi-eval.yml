@@ -1,10 +1,16 @@
-# Asks candidate models the questions in worker/eval/cases.json, with the production prompt,
-# and reports which are accurate and safe enough to answer visitors. Costs a few cents.
+# Munshi Model Evaluation Workflow
 #
-# Run it before changing DEEPINFRA_MODEL in worker/wrangler.jsonc, and after any change to the
-# prompt or to worker/knowledge/facts.md. The result is on the run's summary page.
+# Benchmarks candidate AI models against the test suite in worker/eval/cases.json
+# using the production system prompt, compiled knowledge base, and sampling settings.
+# Scores models on factual accuracy, missing-data handling, prompt-injection defense,
+# off-topic refusal, and confidentiality.
+#
+# Run this manually before changing DEEPINFRA_MODEL in worker/wrangler.jsonc, and after
+# editing worker/knowledge/facts.md or worker/src/prompt.ts.
+# The resulting scorecard and recommendations are written to the GitHub Step Summary.
 name: Munshi evaluation
 
+# Manual trigger only to prevent unintended third-party API inference costs on automated pushes.
 on:
   workflow_dispatch:
     inputs:
@@ -13,6 +19,7 @@ on:
         required: false
         type: string
 
+# Minimal permissions following the principle of least privilege.
 permissions:
   contents: read
 
@@ -25,6 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
+          # Shallow clone: history is not required for evaluation.
           fetch-depth: 1
 
       - name: Setup Node.js
@@ -36,8 +44,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # The input goes through the environment so its text is never run as shell.
-      # The job fails if no candidate passes.
+      # Execute evaluation suite against DeepInfra API.
+      # User input is passed strictly via the environment to prevent shell injection.
+      # The step builds the knowledge base, scores candidate models, writes a summary,
+      # and exits with non-zero if no candidate model passes the safety criteria.
       - name: Run evaluation
         env:
           DEEPINFRA_API_KEY: ${{ secrets.DEEPINFRA_API_KEY }}
