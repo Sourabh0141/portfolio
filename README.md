@@ -389,7 +389,7 @@ groups:
 The resume is served as a static PDF file located at:
 
 ```
-public/resume/Sourabh-Sharma-Resume.pdf
+public/resume/resume.pdf
 ```
 
 To update the resume, replace the file at this path while preserving the filename, or adjust `profile.resume.href` in `src/data/site.ts`.
