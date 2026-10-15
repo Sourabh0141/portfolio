@@ -10,7 +10,7 @@ export const profile = {
   specialty: 'Backend Systems, Applied AI & Cloud Architecture',
   location: 'Jaipur, India',
   headline: 'I architect distributed backends, real-time messaging, and production AI systems.',
-  lead: 'From leading cross-cloud client platforms and event-driven data pipelines to deploying vision, speech, and edge AI companions — engineered for low latency, zero blocking I/O, and resilience under load.',
+  lead: 'From leading cross-cloud client platforms and event-driven data pipelines to deploying vision, speech, and edge AI companions, all engineered for low latency, zero blocking I/O, and resilience under load.',
   email: 'sourabh.sharma0141@gmail.com',
   phone: { display: '+91 89055 95681', href: '+918905595681' },
   employer: 'Predusk Technology Pvt Ltd',
@@ -23,16 +23,16 @@ export const socials = [
   {
     id: 'linkedin',
     label: 'LinkedIn',
-    url: 'https://www.linkedin.com/in/sourabh-sharma-3221932b5/',
+    url: 'https://www.linkedin.com/in/sourabh0141/',
   },
 ] as const;
 
 export const seo = {
-  title: 'Sourabh Sharma — Software Engineer, Backend Systems & Applied AI',
+  title: 'Sourabh Sharma | Software Engineer, Backend Systems & Applied AI',
   description:
     'Portfolio of Sourabh Sharma, a software engineer leading cross-cloud client platforms and architecting async Python backends, real-time messaging (RabbitMQ, MQTT), and production AI systems — including Caliber, Labelfort, Digilekh, and Flare.',
   ogImage: '/og.png',
-  ogImageAlt: 'Sourabh Sharma — Software Engineer, Backend Systems & Applied AI',
+  ogImageAlt: 'Sourabh Sharma | Software Engineer, Backend Systems & Applied AI',
 } as const;
 
 export const nav = [

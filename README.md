@@ -626,7 +626,7 @@ The codebase adheres to the following quality enforcement gates:
 Software Engineer — Backend Systems, Applied AI & Cloud Architecture  
 Location: Jaipur, India  
 Email: [sourabh.sharma0141@gmail.com](mailto:sourabh.sharma0141@gmail.com)  
-LinkedIn: [linkedin.com/in/sourabh-sharma-3221932b5](https://www.linkedin.com/in/sourabh-sharma-3221932b5/)  
+LinkedIn: [linkedin.com/in/sourabh0141](https://www.linkedin.com/in/sourabh0141/)  
 GitHub: [github.com/Sourabh0141](https://github.com/Sourabh0141)
 
 ### License
