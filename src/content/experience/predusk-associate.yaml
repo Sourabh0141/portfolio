@@ -6,17 +6,17 @@ summary: >-
   Leading client backend and cloud engineering from India while architecting distributed systems,
   event-driven streaming, and production AI services across enterprise platforms.
 groups:
-  - heading: Caliber — Cross-Cloud Social Video Platform & Data Engine
+  - heading: Caliber · Cross-Cloud Social Video Platform & Data Engine
     points:
       - >-
         Led offshore engineering from India across Google Cloud and AWS, integrating BigQuery
-        analytics, Cloud Functions, and the Wire newsroom application.
+        analytics, Cloud Functions, and enterprise web applications.
       - >-
         Engineered keyless AWS-to-GCP Workload Identity Federation, allowing AWS Lambda services to
         query BigQuery catalogs without static service account keys.
       - >-
         Decomposed automated tagging into modular Cloud Functions with LLM classification and guarded
-        SQL MERGE write-backs to preserve editorial input.
+        SQL MERGE write-backs to preserve manual annotations.
       - >-
         Built an automated video transcription pipeline with time-budgeted async worker pools, jitter
         retry backoff, and idempotent BigQuery job management.

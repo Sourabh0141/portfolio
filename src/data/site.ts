@@ -30,7 +30,7 @@ export const socials = [
 export const seo = {
   title: 'Sourabh Sharma | Software Engineer, Backend Systems & Applied AI',
   description:
-    'Portfolio of Sourabh Sharma, a software engineer leading cross-cloud client platforms and architecting async Python backends, real-time messaging (RabbitMQ, MQTT), and production AI systems — including Caliber, Labelfort, Digilekh, and Flare.',
+    'Portfolio of Sourabh Sharma, a software engineer leading cross-cloud client platforms and architecting async Python backends, real-time messaging (RabbitMQ, MQTT), and production AI systems, including Caliber, Labelfort, Digilekh, and Flare.',
   ogImage: '/og.png',
   ogImageAlt: 'Sourabh Sharma | Software Engineer, Backend Systems & Applied AI',
 } as const;
