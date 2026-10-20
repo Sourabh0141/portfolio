@@ -1,6 +1,6 @@
 /**
  * Everything personal and non-collection lives here. Edit this file (and the YAML in
- * `src/content`) to update the site — no component changes needed.
+ * `src/content`) to update the site: no component changes needed.
  */
 
 export const profile = {
@@ -68,7 +68,7 @@ export const focusAreas = [
 
 export const about = [
   'I’m a software engineer at Predusk Technology in Jaipur, leading offshore client engineering and architecting distributed backend and applied AI systems. My day-to-day work spans asynchronous Python microservices, real-time event streaming with RabbitMQ and MQTT, and putting production vision, speech, and retrieval models into high-volume workflows across Google Cloud and AWS.',
-  'I focus on engineering out the fragile parts of a system — eliminating synchronous bottlenecks with non-blocking I/O (asyncpg, aioboto3), replacing poll loops with push-based broker topologies, and enforcing strict multi-tenancy and data integrity. Outside client work, I build end-to-end systems such as ArchiveLens (historical newspaper layout segmentation and search) and Flare, an edge-native voice companion running on Cloudflare.',
+  'I focus on engineering out the fragile parts of a system by eliminating synchronous bottlenecks with non-blocking I/O (asyncpg, aioboto3), replacing poll loops with push-based broker topologies, and enforcing strict multi-tenancy and data integrity. Outside client work, I build end-to-end systems such as ArchiveLens (historical newspaper layout segmentation and search) and Flare, an edge-native voice companion running on Cloudflare.',
 ] as const;
 
 export const skills = [
