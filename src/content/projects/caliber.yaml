@@ -1,38 +1,36 @@
 title: Caliber
 order: 1
 kind: Client project · Cross-cloud social video & data platform
-status: Production · Offshore Lead
+status: Live · Offshore Lead
 featured: true
 summary: >-
   A cross-cloud video analytics and content intelligence platform spanning Google Cloud and AWS
   for high-volume enterprise digital media networks. Led offshore engineering from India,
-  architecting automated LLM video classification, asynchronous transcription pipelines, and
-  keyless cross-cloud federation.
+  architecting automated LLM video classification, asynchronous transcription pipelines, and an
+  invisible watermarking solution using Meta's PixelSeal.
 highlights:
   - >-
-    Architected keyless cross-cloud authentication using AWS-to-GCP Workload Identity
-    Federation, allowing AWS Lambda services to query BigQuery catalogs via REST APIs without
-    static service account keys.
+    Built an end-to-end platform on AWS that embeds data into images and videos using Meta's
+    PixelSeal model. The pipeline handles ingestion from social platforms, and the embedded
+    watermark survives compression and other modifications by hiding the payload in pixel brightness.
   - >-
-    Decomposed automated tagging into modular Cloud Functions using LLM classification with
-    guarded SQL MERGE write-backs that strictly preserve human-in-the-loop annotations.
+    Decomposed automated tagging into modular Cloud Functions with guarded SQL MERGE write-backs that
+    strictly preserve human-in-the-loop annotations.
   - >-
     Engineered an automated video transcription pipeline with an asynchronous worker pool,
     time-budgeted execution, exponential jitter backoff, and deterministic BigQuery job IDs
     for idempotent retries.
-  - >-
-    Implemented multi-tenant authorization in the enterprise client web application using Cognito
-    pre-token triggers, API Gateway HTTP APIs, and DynamoDB conditional writes for atomic,
-    tenant-isolated updates.
 stack:
-  - Python
+  - Amazon S3
+  - AWS CDK
+  - AWS Lambda
+  - BigQuery
+  - DynamoDB
   - FastAPI
   - Google Cloud Functions
-  - BigQuery
-  - AWS Lambda
-  - AWS CDK
-  - DynamoDB
-  - Terraform
-  - Workload Identity Federation
+  - Google Cloud Storage
   - Next.js
-links: []
+  - PixelSeal
+  - PyTorch
+  - Python
+  - Terraform

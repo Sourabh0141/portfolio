@@ -1,34 +1,38 @@
 title: ArchiveLens
 order: 6
 kind: Document AI · Historical newspaper segmentation & search
-status: Production · Document AI
+status: Live · Predusk
 featured: false
 summary: >-
   An end-to-end computer vision and search system converting scanned historical Hindi newspaper
-  editions into indexed, searchable articles with exact print clipping viewers. Handles complex
-  multi-column layouts and historical non-contiguous L-shaped story structures.
+  editions into indexed, searchable articles with exact print-clipping viewers. Handles complex
+  multi-column layouts and historical non-contiguous story structures.
 highlights:
   - >-
     Engineered layout analysis combining Roboflow instance segmentation with a 12-pass Shapely
-    polygon refinement algorithm, handling modular and historical L-shaped printing layouts.
+    polygon refinement algorithm, handling modular and historical printing layouts.
   - >-
-    Developed an 8-stage Celery processing pipeline with Surya OCR 2 on vLLM, featuring an automated
-    loop-defence mechanism using zlib compression ratio checks (<0.06) and temperature escalation
+    Developed a Celery processing pipeline with Surya OCR 2 on vLLM, featuring an automated
+    loop-defence mechanism using zlib compression ratio checks and temperature escalation
     to eliminate repetitive hallucinations on dense Devanagari text.
   - >-
-    Built a full-text search index in OpenSearch 3.8.0 featuring ICU transliteration analyzers,
+    Built a full-text search index in OpenSearch featuring ICU transliteration analyzers,
     custom Hindi stemmers, and faceted metadata classification via Gemma.
   - >-
     Delivered interactive Next.js reading interfaces showing polygon-clipped print clippings
     alongside transcribed text, with prefetching and keyboard navigation.
 stack:
-  - FastAPI
   - Celery
-  - Roboflow Segmentation
-  - Surya OCR (vLLM)
-  - Shapely
-  - OpenSearch
-  - PostgreSQL
+  - FastAPI
+  - Gemma
   - MinIO
   - Next.js
+  - OpenSearch
+  - PostgreSQL
+  - RabbitMQ
+  - Roboflow
+  - Shapely
+  - SQLAlchemy
+  - Surya OCR 2
+  - vLLM
 links: []

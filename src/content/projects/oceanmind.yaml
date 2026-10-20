@@ -1,19 +1,22 @@
 title: OceanMind
 order: 5
-kind: Commercial automation · Travel portal quoting engine
-status: Production · Predusk
+kind: Commercial automation · Cruise travel portal quoting engine
+status: Live · Predusk
 featured: false
 summary: >-
-  A high-throughput browser automation engine that automates cruise pricing and commission calculations
-  across 5 travel-agent supplier portals. Replaced slow, manual quoting workflows with parallel
-  headless Chromium execution, live streaming telemetry, and human-in-the-loop verification.
+  A high-throughput browser automation engine that automates cruise pricing and commission
+  calculations across 5 travel-agent supplier portals. Replaced slow, manual quoting workflows
+  with parallel headless Chromium execution, live streaming telemetry, and human-in-the-loop
+  verification.
 highlights:
   - >-
-    Architected parallel browser execution using Playwright Chromium: shared long-lived headless
-    instances with isolated per-cabin BrowserContexts running concurrently via asyncio.gather.
+    Migrated from Selenium to Playwright to architect parallel browser execution, replacing
+    resource-heavy dedicated browser instances with lightweight per-cabin BrowserContexts running via
+    asyncio.gather to cut memory usage by 75% and accelerate quote generation by 3x.
   - >-
-    Migrated the data access and media layer to non-blocking asynchronous I/O using connection-pooled
-    asyncpg and aioboto3 client pools, removing event loop bottlenecks.
+    Migrated the data access and media layers to non-blocking asyncpg and aioboto3 connection pools,
+    eliminating event loop starvation and delivering 3x higher database concurrency while streaming
+    real-time telemetry.
   - >-
     Streamed real-time execution logs and progress bars to the Next.js frontend via Server-Sent
     Events (SSE) with strict per-user log isolation and cancellation mechanics.
@@ -21,13 +24,16 @@ highlights:
     Implemented an auditable human-in-the-loop validation flow, capturing multi-step screenshots
     and compressed video evidence (FFmpeg) stored in MinIO for review.
 stack:
-  - FastAPI
-  - Playwright (Async)
+  - aioboto3
+  - asyncpg
   - Chromium
-  - PostgreSQL (asyncpg)
-  - MinIO (aioboto3)
+  - FastAPI
+  - FFmpeg
+  - MinIO
+  - Next.js
+  - Playwright (Async)
+  - PostgreSQL
+  - Python
   - Redis
   - Server-Sent Events
-  - FFmpeg
-  - Next.js
 links: []

@@ -1,12 +1,14 @@
 title: Labelfort
 order: 2
-kind: Commercial product · AI data annotation & delivery platform
-status: Live · Enterprise
+kind: Commercial product · Audit-ready AI data annotation & delivery platform
+status: Live · Predusk
 featured: true
 summary: >-
-  A multi-tenant platform for producing high-precision ML training data across 8 media types
-  (images, video, audio, DICOM, 3D point clouds). Engineered the real-time event distribution
-  platform, computer vision AI microservices, and automated synthetic data generation.
+  A multi-tenant, audit-ready platform for producing high-precision ML training data across
+  eight media types (images, video, audio, DICOM, 3D point clouds, and more), built for AI
+  teams in regulated industries whose training data must survive an audit. Engineered the
+  real-time event distribution platform, GPU-accelerated computer vision microservices, and
+  automated synthetic data generation.
 highlights:
   - >-
     Replaced polling and SSE with a centralized RabbitMQ topic exchange and Web-MQTT streaming
@@ -14,8 +16,9 @@ highlights:
     RBAC topic filtering.
   - >-
     Integrated GPU-accelerated computer vision microservices: interactive click/box polygon
-    segmentation via Segment Anything (SAM 2.1) and multi-object video tracking via YOLO11x with
-    BoT-SORT.
+    segmentation via SAM 2.1 and multi-object video tracking via YOLO11x with BoT-SORT,
+    reducing manual polygon annotation time by over 70% and automating cross-frame video tracking
+    at 30+ FPS.
   - >-
     Engineered the Synthetic Data Designer module from prompt-driven generation to direct
     persistence, schema validation, preview, and CSV machine-learning export.
@@ -23,17 +26,20 @@ highlights:
     Eliminated upload bottlenecks with browser-direct presigned S3/MinIO multipart uploads,
     SHA-256 duplicate detection before transfer, and resume checkpoints.
 stack:
-  - FastAPI
-  - SQLAlchemy (Async)
-  - RabbitMQ (MQTT)
-  - Celery
-  - SAM 2.1
-  - YOLO11x
+  - Amazon S3
   - BoT-SORT
-  - PostgreSQL
-  - Redis
+  - Celery
+  - FastAPI
   - MinIO
   - Next.js
+  - PostgreSQL
+  - Python
+  - RabbitMQ (Web MQTT)
+  - Redis
+  - SAM 2.1
+  - SQLAlchemy (Async)
+  - WebSockets
+  - YOLO11x
 links:
   - label: Visit Labelfort
     url: https://www.labelfort.ai

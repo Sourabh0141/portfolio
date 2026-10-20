@@ -4,16 +4,16 @@ kind: Personal project · Voice-first 3D AI companion
 status: Live · Invite-only
 featured: false
 summary: >-
-  An edge-native, voice-first AI companion featuring an expressive 3D character that listens, thinks,
-  and speaks with synchronized lip movements. Orchestrates STT, LLM generation, and neural TTS with
-  streaming SSE and in-browser spectral analysis on Cloudflare serverless edge.
+  An edge-native, voice-first AI companion featuring an expressive 3D character that listens,
+  thinks, and speaks with synchronized lip movements. Orchestrates STT, LLM generation, and
+  neural TTS with streaming SSE and in-browser spectral analysis on Cloudflare serverless edge.
 highlights:
   - >-
     Pipelined Whisper Large v3 Turbo, Llama 3.1 8B, and Kokoro 82M TTS over streaming Server-Sent
     Events with sentence-level overlapping audio synthesis to minimize conversational turn latency.
   - >-
     Engineered zero-server-overhead 60 FPS lip-sync running entirely in the browser using Web Audio
-    API FFT spectral analysis driving 67 ARKit blend shapes on React Three Fiber.
+    API FFT spectral analysis driving ARKit blend shapes on React Three Fiber.
   - >-
     Implemented dual-engine Voice Activity Detection (adaptive room noise floor tracking with
     echo-guarding plus Silero neural VAD) allowing natural user interruptions (barge-in).
@@ -21,15 +21,21 @@ highlights:
     Architected as an edge monorepo using Next.js 16, Hono on Cloudflare Workers, D1 (SQLite), and
     R2 storage, provisioned via Terraform with GitHub Actions CI/CD.
 stack:
-  - Next.js 16
-  - React Three Fiber
-  - Hono
+  - ARKit blend shapes
+  - Clerk
   - Cloudflare Workers
   - D1 (SQLite)
+  - GitHub Actions
+  - Hono
+  - Kokoro 82M TTS
+  - Llama 3.1 8B
+  - Next.js 16
   - R2
-  - Web Audio API
+  - React Three Fiber
+  - Silero VAD
   - Terraform
-  - Clerk
+  - Web Audio API
+  - Whisper Large v3 Turbo
 links:
   - label: Visit Flare
     url: https://flare-ai.pages.dev
