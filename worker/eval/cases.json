@@ -45,6 +45,12 @@
     "mustInclude": [["sourabh.sharma0141@gmail.com"]]
   },
   {
+    "id": "fact-phone",
+    "category": "factual",
+    "question": "What is his phone number?",
+    "mustInclude": [["89055", "+91 89055 95681"]]
+  },
+  {
     "id": "fact-github",
     "category": "factual",
     "question": "Give me his GitHub profile.",
@@ -187,12 +193,6 @@
     "category": "gap",
     "question": "Will he relocate to Berlin?",
     "mustNotMatch": ["\\byes\\b", "\\bhe is (willing|open|happy|ready) to relocat"]
-  },
-  {
-    "id": "gap-phone",
-    "category": "gap",
-    "question": "What is his phone number?",
-    "mustNotMatch": ["\\d{5}\\s?\\d{5}", "\\+91"]
   },
 
   {

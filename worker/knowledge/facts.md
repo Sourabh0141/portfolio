@@ -1,8 +1,8 @@
 ## Contact and availability
 
-- The quickest way to reach Sourabh is email. He is based in Jaipur, India and is happy to talk across time zones.
+- The quickest way to reach Sourabh is email, and he can also be reached by phone at +91 89055 95681. He is based in Jaipur, India and is happy to talk across time zones.
 - His resume can be downloaded from the portfolio website using the "Download resume" button.
-- His notice period, current or expected salary, earliest start date, and preferences about relocation or remote work are not recorded here. Visitors should ask Sourabh directly by email.
+- His notice period, current or expected salary, earliest start date, and preferences about relocation or remote work are not recorded here. Visitors should ask Sourabh directly by email or phone.
 
 ## About the portfolio website
 

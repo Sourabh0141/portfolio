@@ -49,8 +49,8 @@ const knowledge = renderKnowledge({
   facts,
 });
 
-// Munshi points visitors to email. The phone number stays on the page and out of the model.
-const problems = checkKnowledge(knowledge, [profile.phone.display, profile.phone.href]);
+// Check for unfinished notes (TODO/TBD/FIXME) or oversize knowledge.
+const problems = checkKnowledge(knowledge, []);
 if (problems.length > 0) {
   console.error(
     `Knowledge build failed:\n${problems.map((problem) => `  - ${problem}`).join('\n')}`,

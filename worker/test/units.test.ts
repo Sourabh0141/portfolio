@@ -294,6 +294,7 @@ describe('knowledge', () => {
       headline: 'I build\n  things.',
       lead: 'Lead text.',
       email: 'asha@site.test',
+      phone: { display: '+91 98765 43210', href: '+919876543210' },
       employer: 'Acme',
       resume: { href: '/resume/cv.pdf' },
     },
@@ -356,6 +357,7 @@ describe('knowledge', () => {
     expect(text).toContain('Dates: Nov 2022 to present');
     expect(text).toContain('Dates: Jan 2020 to Mar 2021');
     expect(text).toContain('Resume (PDF): https://site.test/resume/cv.pdf');
+    expect(text).toContain('Phone: +91 98765 43210');
     expect(text).toContain('Visit: https://first.test');
     expect(text).toContain('Headline: I build things.');
     expect(text).toContain('- Did a thing.');
@@ -363,17 +365,17 @@ describe('knowledge', () => {
   });
 
   it('flags forbidden terms however they are spaced, oversize text and unfinished notes', () => {
-    expect(checkKnowledge('Call 890 5595-681 now', ['+91 89055 95681'])).toEqual([]);
-    expect(checkKnowledge('Call +91 (89055) 95681 now', ['+91 89055 95681'])).toHaveLength(1);
+    expect(checkKnowledge('Call 123 4567-890 now', ['+91 12345 67890'])).toEqual([]);
+    expect(checkKnowledge('Call +91 (12345) 67890 now', ['+91 12345 67890'])).toHaveLength(1);
     expect(checkKnowledge('x'.repeat(MAX_KNOWLEDGE_CHARS + 1), [])).toHaveLength(1);
     expect(checkKnowledge('Salary: TBD', [])).toHaveLength(1);
     expect(checkKnowledge('All fine.', ['secret'])).toEqual([]);
   });
 
-  it('is built from the portfolio and leaves the phone number out', () => {
+  it('is built from the portfolio and includes contact details', () => {
     expect(KNOWLEDGE_VERSION).toMatch(/^[0-9a-f]{12}$/);
     expect(KNOWLEDGE).toContain('Sourabh Sharma');
     expect(KNOWLEDGE).toContain('# Projects');
-    expect(KNOWLEDGE).not.toMatch(/\d{5}\s?\d{5}/);
+    expect(KNOWLEDGE).toContain('+91 89055 95681');
   });
 });

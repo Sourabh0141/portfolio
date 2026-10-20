@@ -36,6 +36,7 @@ export interface KnowledgeInput {
     headline: string;
     lead: string;
     email: string;
+    phone?: { display: string; href?: string };
     employer: string;
     resume: { href: string };
   };
@@ -93,6 +94,7 @@ export function renderKnowledge(input: KnowledgeInput): string {
     [
       '# Contact and links',
       `Email: ${profile.email}`,
+      ...(profile.phone ? [`Phone: ${profile.phone.display}`] : []),
       `Portfolio: ${input.siteUrl}`,
       `Resume (PDF): ${new URL(profile.resume.href, input.siteUrl).href}`,
       ...input.socials.map((social) => `${social.label}: ${social.url}`),
