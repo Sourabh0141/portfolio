@@ -92,7 +92,6 @@ export const skills = [
       'Qdrant',
       'Roboflow',
       'PyTorch',
-      'Shapely',
     ],
   },
   {
@@ -110,13 +109,7 @@ export const skills = [
   },
   {
     heading: 'Messaging & real-time',
-    items: [
-      'RabbitMQ (Topic Exchange)',
-      'Web-MQTT',
-      'WebSockets',
-      'Server-Sent Events (SSE)',
-      'asyncio',
-    ],
+    items: ['RabbitMQ (Topic Exchange)', 'Web-MQTT', 'WebSockets', 'Server-Sent Events (SSE)'],
   },
   {
     heading: 'Data & storage',
