@@ -12,58 +12,75 @@ groups:
         Led offshore engineering from India across Google Cloud and AWS, integrating BigQuery
         analytics, Cloud Functions, and enterprise web applications.
       - >-
-        Engineered keyless AWS-to-GCP Workload Identity Federation, allowing AWS Lambda services to
-        query BigQuery catalogs without static service account keys.
+        Built an end-to-end platform on AWS that embeds data into images and videos using Meta's
+        PixelSeal model, ensuring watermarks survive compression across social platforms.
       - >-
-        Decomposed automated tagging into modular Cloud Functions with LLM classification and guarded
-        SQL MERGE write-backs to preserve manual annotations.
+        Decomposed automated tagging into modular Cloud Functions with guarded SQL MERGE write-backs
+        that strictly preserve human-in-the-loop annotations.
       - >-
-        Built an automated video transcription pipeline with time-budgeted async worker pools, jitter
-        retry backoff, and idempotent BigQuery job management.
-  - heading: Labelfort — Multi-Tenant AI Data Annotation Platform
+        Engineered an automated video transcription pipeline with an asynchronous worker pool,
+        time-budgeted execution, exponential jitter backoff, and deterministic BigQuery job IDs for
+        idempotent retries.
+  - heading: Labelfort · Audit-Ready AI Data Annotation Platform
     points:
       - >-
-        Replaced polling and SSE with a RabbitMQ topic exchange and Web-MQTT gateway over WebSockets,
-        delivering real-time progress for 5 event domains with role-based topic filtering.
+        Replaced polling and SSE with a centralized RabbitMQ topic exchange and Web-MQTT streaming
+        gateway over WebSockets, delivering real-time progress for 5 event domains with token-based
+        RBAC topic filtering.
       - >-
-        Integrated GPU-accelerated microservices: click/box polygon segmentation via SAM 2.1 and
-        multi-object video tracking via YOLO11x with BoT-SORT.
+        Integrated GPU-accelerated computer vision microservices: interactive click/box polygon
+        segmentation via SAM 2.1 and multi-object video tracking via YOLO11x with BoT-SORT,
+        reducing manual polygon annotation time by over 70% and automating tracking at 30+ FPS.
       - >-
-        Engineered the Synthetic Data Designer module from prompt generation to direct persistence,
-        live preview, and CSV machine-learning export.
+        Engineered the Synthetic Data Designer module from prompt-driven generation to direct
+        persistence, schema validation, live preview, and CSV machine-learning export.
       - >-
-        Built browser-direct presigned S3/MinIO multipart uploads with SHA-256 duplicate detection
-        and resume checkpoints.
-  - heading: Digilekh — Document Intelligence & Audit Automation Platform
+        Eliminated upload bottlenecks with browser-direct presigned S3/MinIO multipart uploads,
+        SHA-256 duplicate detection before transfer, and resume checkpoints.
+  - heading: Digilekh · Customizable Document Intelligence & Audit Automation
     points:
       - >-
-        Engineered a 9-stage Celery ingestion pipeline with Surya OCR, page-level chunking, and hybrid
-        dense/sparse vector indexing in Qdrant.
+        Engineered a multi-stage Celery ingestion pipeline processing scanned and digital PDFs via
+        Surya OCR 2, page-level chunking, and hybrid dense/sparse vector upserts into Qdrant.
       - >-
-        Led the non-blocking async migration across 3 core microservices using SQLAlchemy 2 async
-        (asyncpg), aioboto3, and httpx to eliminate event loop starvation.
+        Led the non-blocking async migration across three core microservices using SQLAlchemy 2
+        async (asyncpg), aioboto3, and httpx, eliminating event loop starvation under high
+        concurrency.
       - >-
-        Integrated self-hosted Faster-Whisper (STT) and Kokoro-82M (TTS) microservices with TTL
-        caching for voice interactions and read-aloud features.
+        Integrated self-hosted GPU speech microservices using Faster-Whisper (speech-to-text) and
+        Kokoro-82M (neural text-to-speech) with TTL-based memory caching for real-time voice
+        interactions.
       - >-
-        Built a centralized Redis caching layer and unified chunk index with tenant-isolated
-        invalidation.
-  - heading: ArchiveLens — Historical Newspaper AI & Search
+        Implemented a centralized Redis caching layer with tenant-isolated invalidation and unified
+        chunk indexing across core API, ingestion, and retrieval services.
+  - heading: ArchiveLens · Historical Newspaper Segmentation & Search
     points:
       - >-
-        Built an end-to-end pipeline cutting scanned Hindi newspaper pages into articles using instance
-        segmentation, 12-pass Shapely polygon refinement, and Surya OCR on vLLM.
+        Engineered layout analysis combining Roboflow instance segmentation with a 12-pass Shapely
+        polygon refinement algorithm, handling modular and historical printing layouts.
       - >-
-        Implemented OCR loop defence using zlib compression ratio checks (<0.06) and temperature
-        escalation to eliminate repetitive hallucinations on dense Devanagari text.
+        Developed a Celery processing pipeline with Surya OCR 2 on vLLM, featuring an automated
+        loop-defence mechanism using zlib compression ratio checks and temperature escalation to
+        eliminate repetitive hallucinations on dense Devanagari text.
       - >-
-        Designed an OpenSearch search index with ICU transliteration and custom Hindi analyzers
-        supporting transliterated queries.
-  - heading: Sankirtan — Moderated Community Event Platform
+        Designed an OpenSearch search index with ICU transliteration analyzers, custom Hindi stemmers,
+        and faceted metadata classification via Gemma.
+      - >-
+        Delivered interactive Next.js reading interfaces showing polygon-clipped print clippings
+        alongside transcribed text, with prefetching and keyboard navigation.
+  - heading: Sankirtan · Moderated Devotional Event Platform
     points:
       - >-
         Designed and built the async FastAPI backend as sole author, with a compare-and-swap
-        moderation state machine enforced by PostgreSQL CHECK constraints.
+        moderation state machine enforced by PostgreSQL CHECK constraints to keep racing requests safe.
       - >-
-        Hardened anonymous submissions with three-stage image verification, HMAC-hashed IP rate
-        limiting, and Argon2 with HttpOnly JWT cookie admin authentication.
+        Hardened the unauthenticated upload endpoint with three-stage image verification (MIME
+        allow-list, format match, and full Pillow decode) running on bounded worker threads off
+        the event loop.
+      - >-
+        Built privacy-preserving rate limiting for submissions and logins using HMAC-SHA256 keyed IP
+        hashes counted from existing tables, storing no raw addresses and needing no separate counter
+        store.
+      - >-
+        Secured admin access with Argon2 hashing and HttpOnly JWT cookies, and shipped idempotent SQL
+        migrations through an advisory-locked runner alongside an HTTP-level integration test suite.

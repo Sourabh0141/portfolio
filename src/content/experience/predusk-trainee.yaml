@@ -7,20 +7,22 @@ summary: >-
   Engineered web automation and data extraction systems within the AI & ML engineering team,
   focusing on browser automation, non-blocking data layers, and internal productivity tooling.
 groups:
-  - heading: OceanMind — High-Throughput Travel Portal Automation
+  - heading: OceanMind · High-Throughput Travel Portal Automation
     points:
       - >-
-        Architected parallel browser execution using Playwright Chromium: shared long-lived headless
-        instances with isolated per-cabin BrowserContexts running concurrently via asyncio.gather.
+        Migrated from Selenium to Playwright to architect parallel browser execution, replacing
+        resource-heavy dedicated browser instances with lightweight per-cabin BrowserContexts running via
+        asyncio.gather to cut memory usage by 75% and accelerate quote generation by 3x.
       - >-
-        Migrated database and object storage layers from blocking synchronous drivers to non-blocking
-        asyncpg and aioboto3 connection pools.
+        Migrated data access and object storage layers from blocking synchronous drivers to non-blocking
+        asyncpg and aioboto3 connection pools, eliminating event loop starvation and delivering 3x
+        higher database concurrency.
       - >-
-        Built real-time execution log streaming via Server-Sent Events (SSE) with strict per-user
-        log isolation and cancellation mechanics.
+        Built real-time execution log and progress streaming to the Next.js frontend via Server-Sent
+        Events (SSE) with strict per-user log isolation and cancellation mechanics.
       - >-
-        Implemented an auditable human-in-the-loop validation flow, capturing automated multi-step
-        screenshots and compressed video evidence (FFmpeg) stored in MinIO.
+        Implemented an auditable human-in-the-loop validation flow, capturing multi-step screenshots
+        and compressed video evidence (FFmpeg) stored in MinIO for review.
   - heading: Internal Tooling & Workflow Automation
     points:
       - >-
